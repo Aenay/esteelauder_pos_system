@@ -20,82 +20,79 @@
         body {
             font-family: 'Inter', sans-serif;
         }
-
         .sidebar-link {
             transition: background-color 0.2s, color 0.2s;
         }
-
         .sidebar-link:hover,
         .sidebar-link.active {
             background-color: #db2777;
             color: white;
         }
-
         .custom-scrollbar::-webkit-scrollbar {
             width: 6px;
         }
-
         .custom-scrollbar::-webkit-scrollbar-track {
             background: #f1f1f1;
         }
-
         .custom-scrollbar::-webkit-scrollbar-thumb {
             background: #888;
             border-radius: 3px;
         }
-
         .custom-scrollbar::-webkit-scrollbar-thumb:hover {
             background: #555;
         }
     </style>
 </head>
 
-<body class="font-sans antialiased">
-    <div class="flex h-screen bg-gray-200">
+<body class="font-sans antialiased bg-gray-200 dark:bg-gray-900">
+    <div class="flex h-screen bg-gray-200 dark:bg-gray-900">
         <!-- Sidebar -->
-        <aside class="w-64 bg-gray-800 text-white flex flex-col">
-            <div class="h-20 flex items-center justify-center bg-gray-900">
+        <aside class="w-64 bg-gray-800 dark:bg-gray-950 text-white flex flex-col">
+            <div class="h-20 flex items-center justify-center bg-gray-900 dark:bg-gray-800">
                 <h1 class="text-2xl font-bold">Estee Lauder</h1>
+                <!-- <button id="darkModeToggle" class="ml-4 px-3 py-1 rounded bg-gray-700 dark:bg-gray-600 text-white hover:bg-pink-500 dark:hover:bg-pink-600 transition-colors" title="Toggle Dark Mode">
+                    <i class="fas fa-moon"></i>
+                </button> -->
             </div>
             <nav class="flex-1 px-4 py-6 space-y-2">
-                <a href="{{ url('/dashboard') }}" class="sidebar-link flex items-center px-4 py-2 rounded-lg {{ request()->is('dashboard') ? 'active' : '' }}">
+                <a href="{{ url('/dashboard') }}" class="sidebar-link flex items-center px-4 py-2 rounded-lg {{ request()->is('dashboard') ? 'active' : '' }} dark:hover:bg-pink-600 dark:active:bg-pink-700">
                     <i class="fas fa-tachometer-alt w-6"></i><span>Dashboard</span>
                 </a>
-                <a href="{{ url('/pos') }}" class="sidebar-link flex items-center px-4 py-2 rounded-lg {{ request()->is('pos') ? 'active' : '' }}">
+                <a href="{{ url('/pos') }}" class="sidebar-link flex items-center px-4 py-2 rounded-lg {{ request()->is('pos') ? 'active' : '' }} dark:hover:bg-pink-600 dark:active:bg-pink-700">
                     <i class="fas fa-cash-register w-6"></i><span>POS</span>
                 </a>
-                <a href="{{ route('admin.products.index') }}" class="sidebar-link flex items-center px-4 py-2 rounded-lg {{ request()->is('products') ? 'active' : '' }}">
+                <a href="{{ route('admin.products.index') }}" class="sidebar-link flex items-center px-4 py-2 rounded-lg {{ request()->is('products') ? 'active' : '' }} dark:hover:bg-pink-600 dark:active:bg-pink-700">
                     <i class="fas fa-box-open w-6"></i><span>Products</span>
                 </a>
-                <a href="{{ route('admin.orders.index')  }}" class="sidebar-link flex items-center px-4 py-2 rounded-lg {{ request()->is('orders') ? 'active' : '' }}">
+                <a href="{{ route('admin.orders.index')  }}" class="sidebar-link flex items-center px-4 py-2 rounded-lg {{ request()->is('orders') ? 'active' : '' }} dark:hover:bg-pink-600 dark:active:bg-pink-700">
                     <i class="fas fa-receipt w-6"></i><span>Orders</span>
                 </a>
-                <a href="{{ route('promotions.index') }}" class="sidebar-link flex items-center px-4 py-2 rounded-lg {{ request()->is('promotions') ? 'active' : '' }}">
+                <a href="{{ route('promotions.index') }}" class="sidebar-link flex items-center px-4 py-2 rounded-lg {{ request()->is('promotions') ? 'active' : '' }} dark:hover:bg-pink-600 dark:active:bg-pink-700">
                     <i class="fas fa-tags w-6"></i><span>Promotions</span>
                 </a>
-                <a href="#" class="sidebar-link flex items-center px-4 py-2 rounded-lg">
+                <a href="#" class="sidebar-link flex items-center px-4 py-2 rounded-lg dark:hover:bg-pink-600 dark:active:bg-pink-700">
                     <i class="fas fa-users w-6"></i><span>Customers</span>
                 </a>
                 @role('admin')
-                <a href="{{ route('admin.users.index') }}" class="sidebar-link flex items-center px-4 py-2 rounded-lg {{ request()->is('admin/users') ? 'active' : '' }}">
+                <a href="{{ route('admin.users.index') }}" class="sidebar-link flex items-center px-4 py-2 rounded-lg {{ request()->is('admin/users') ? 'active' : '' }} dark:hover:bg-pink-600 dark:active:bg-pink-700">
                     <i class="fas fa-user-shield w-6"></i><span>Admin</span>
                 </a>
                 @endrole
             </nav>
             <!-- User Profile Section -->
-            <div class="p-4 border-t border-gray-700">
+            <div class="p-4 border-t border-gray-700 dark:border-gray-800">
                 <div class="flex items-center">
                     <img class="h-10 w-10 rounded-full" src="https://placehold.co/100x100/fce7f3/4a044e?text=JD" alt="User Avatar">
                     <div class="ml-3">
                         <p class="text-sm font-semibold text-white">{{ Auth::user()->name }}</p>
                         <div class="flex items-center space-x-3 mt-1">
-                            <a href="{{ route('profile.edit') }}" class="text-xs text-gray-400 hover:text-white transition-colors" title="Profile">
+                            <a href="{{ route('profile.edit') }}" class="text-xs text-gray-400 dark:text-gray-300 hover:text-white transition-colors" title="Profile">
                                 <i class="fas fa-user-circle mr-1"></i>
                                 Profile
                             </a>
                             <form method="POST" action="{{ route('logout') }}">
                                 @csrf
-                                <a href="{{ route('logout') }}" class="text-xs text-pink-400 hover:text-pink-300 transition-colors" title="Logout" onclick="event.preventDefault(); this.closest('form').submit();">
+                                <a href="{{ route('logout') }}" class="text-xs text-pink-400 dark:text-pink-300 hover:text-pink-300 dark:hover:text-pink-200 transition-colors" title="Logout" onclick="event.preventDefault(); this.closest('form').submit();">
                                     <i class="fas fa-sign-out-alt mr-1"></i>
                                     Logout
                                 </a>
@@ -108,14 +105,18 @@
         <!-- Main Content Area -->
         <div class="flex-1 flex flex-col overflow-hidden">
             @if (isset($header))
-            <header class="bg-white shadow">
+            <header class="bg-white dark:bg-gray-800 shadow">
                 <div class="max-w-7xl mx-auto py-6 px-4 sm:px-6 lg:px-8">
                     {{ $header }}
                 </div>
             </header>
             @endif
-            <main class="flex-1 overflow-x-hidden overflow-y-auto bg-gray-100 p-6">
-                @yield('content')
+            <main class="flex-1 overflow-x-hidden overflow-y-auto bg-gray-100 dark:bg-gray-900 p-6">
+                @if (isset($slot))
+                    {{ $slot }}
+                @else
+                    @yield('content')
+                @endif
             </main>
         </div>
     </div>

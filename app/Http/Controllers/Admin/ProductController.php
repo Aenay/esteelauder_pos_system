@@ -5,12 +5,20 @@ namespace App\Http\Controllers\Admin;
 use App\Http\Controllers\Controller;
 use App\Models\Product;
 use Illuminate\Http\Request;
+use Illuminate\Support\Facades\Storage;
 
 class ProductController extends Controller
 {
-    public function index()
+    public function index(Request $request)
     {
-        $products = Product::all();
+        $query = $request->input('search');
+        $products = Product::query()
+            ->when($query, function ($q, $query) {
+                return $q->where('Product_Name', 'like', "%{$query}%")
+                         ->orWhere('SKU', 'like', "%{$query}%");
+            })
+            ->paginate(10);
+
         return view('admin.products.index', compact('products'));
     }
 
@@ -23,13 +31,27 @@ class ProductController extends Controller
     {
         $validated = $request->validate([
             'name' => 'required|string|max:255',
-            'sku' => 'required|string|unique:products',
+            'sku' => 'required|string|unique:products,SKU',
             'price' => 'required|numeric|min:0',
             'stock' => 'required|integer|min:0',
-            'description' => 'nullable|string'
+            'description' => 'nullable|string',
+            'image' => 'nullable|image|mimes:jpeg,png,jpg,gif,svg|max:2048',
         ]);
 
-        Product::create($validated);
+        $dataToCreate = [
+            'Product_Name' => $validated['name'],
+            'SKU' => $validated['sku'],
+            'Price' => $validated['price'],
+            'Quantity_on_Hand' => $validated['stock'],
+            'description' => $validated['description'],
+        ];
+
+        if ($request->hasFile('image')) {
+            $imagePath = $request->file('image')->store('products', 'public');
+            $dataToCreate['image'] = $imagePath;
+        }
+
+        Product::create($dataToCreate);
         return redirect()->route('admin.products.index')
             ->with('success', 'Product created successfully');
     }
@@ -48,19 +70,41 @@ class ProductController extends Controller
     {
         $validated = $request->validate([
             'name' => 'required|string|max:255',
-            'sku' => 'required|string|unique:products,sku,' . $product->id,
+            'sku' => 'required|string|unique:products,SKU,' . $product->Product_ID . ',Product_ID',
             'price' => 'required|numeric|min:0',
             'stock' => 'required|integer|min:0',
-            'description' => 'nullable|string'
+            'description' => 'nullable|string',
+            'image' => 'nullable|image|mimes:jpeg,png,jpg,gif,svg|max:2048',
         ]);
 
-        $product->update($validated);
+        $dataToUpdate = [
+            'Product_Name' => $validated['name'],
+            'SKU' => $validated['sku'],
+            'Price' => $validated['price'],
+            'Quantity_on_Hand' => $validated['stock'],
+            'description' => $validated['description'],
+        ];
+
+        if ($request->hasFile('image')) {
+            // Delete old image if it exists
+            if ($product->image) {
+                Storage::disk('public')->delete($product->image);
+            }
+            $imagePath = $request->file('image')->store('products', 'public');
+            $dataToUpdate['image'] = $imagePath;
+        }
+
+        $product->update($dataToUpdate);
         return redirect()->route('admin.products.index')
             ->with('success', 'Product updated successfully');
     }
 
     public function destroy(Product $product)
     {
+        // Delete the image if it exists
+        if ($product->image) {
+            Storage::disk('public')->delete($product->image);
+        }
         $product->delete();
         return redirect()->route('admin.products.index')
             ->with('success', 'Product deleted successfully');

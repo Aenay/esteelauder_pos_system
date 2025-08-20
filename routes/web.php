@@ -23,6 +23,7 @@ Route::middleware(['auth'])->group(function () {
     Route::prefix('ajax')->name('ajax.')->group(function () {
         Route::get('products/search', [PosController::class, 'searchProducts'])->name('products.search');
         Route::prefix('cart')->name('cart.')->group(function () {
+            Route::get('/', [PosController::class, 'getCart'])->name('get');
             Route::post('add', [PosController::class, 'addToCart'])->name('add');
             Route::post('update', [PosController::class, 'updateCart'])->name('update');
             Route::post('remove', [PosController::class, 'removeFromCart'])->name('remove');
@@ -43,7 +44,7 @@ Route::middleware(['auth'])->group(function () {
 });
 
 // Admin Routes
-Route::middleware(['auth', 'verified', 'role:admin'])->prefix('admin')->name('admin.')->group(function () {
+Route::middleware(['auth', 'verified', 'role:admin|mananger'])->prefix('admin')->name('admin.')->group(function () {
     // Dashboard
     Route::get('/dashboard', [AdminDashboardController::class, 'index'])->name('dashboard');
 

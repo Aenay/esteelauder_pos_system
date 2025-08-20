@@ -11,10 +11,19 @@
             <div class="bg-white p-6 rounded-lg shadow-md">
                 <div class="flex justify-between items-center mb-4">
                     <h2 class="text-xl font-semibold">Product List</h2>
-                    <a href="#" class="bg-pink-600 hover:bg-pink-700 text-white font-bold py-2 px-4 rounded-lg transition-colors">
+                    <a href="{{ route('admin.products.create') }}" class="bg-pink-600 hover:bg-pink-700 text-white font-bold py-2 px-4 rounded-lg transition-colors">
                         <i class="fas fa-plus mr-2"></i>Add New Product
                     </a>
                 </div>
+
+                <!-- Search Form -->
+                <form action="{{ route('admin.products.index') }}" method="GET" class="mb-4">
+                    <div class="flex items-center">
+                        <input type="text" name="search" placeholder="Search by name or SKU" class="shadow appearance-none border rounded w-full py-2 px-3 text-gray-700 leading-tight focus:outline-none focus:shadow-outline" value="{{ request('search') }}">
+                        <button type="submit" class="ml-2 bg-pink-600 hover:bg-pink-700 text-white font-bold py-2 px-4 rounded-lg transition-colors">Search</button>
+                    </div>
+                </form>
+
                 <!-- Product Table -->
                 <div class="overflow-x-auto">
                     <table class="min-w-full bg-white">
@@ -29,23 +38,42 @@
                             </tr>
                         </thead>
                         <tbody class="text-gray-700">
-                            @foreach ($products as $product)
+                            @forelse ($products as $product)
                                 <tr class="border-b">
                                     <td class="py-3 px-6">
-                                        <img src="{{ $product['image'] }}" alt="{{ $product['name'] }}" class="w-16 h-16 object-cover rounded-md">
+                                        @if ($product->image)
+                                            <img src="{{ asset('storage/' . $product->image) }}" alt="{{ $product->Product_Name }}" class="w-16 h-16 object-cover rounded-md">
+                                        @else
+                                            <div class="w-16 h-16 bg-gray-200 rounded-md flex items-center justify-center">
+                                                <span class="text-xs text-gray-500">No Image</span>
+                                            </div>
+                                        @endif
                                     </td>
-                                    <td class="py-3 px-6">{{ $product['sku'] }}</td>
-                                    <td class="py-3 px-6 font-medium">{{ $product['name'] }}</td>
-                                    <td class="py-3 px-6">${{ number_format($product['price'], 2) }}</td>
-                                    <td class="py-3 px-6 text-center">{{ $product['stock'] }}</td>
+                                    <td class="py-3 px-6">{{ $product->SKU }}</td>
+                                    <td class="py-3 px-6 font-medium">{{ $product->Product_Name }}</td>
+                                    <td class="py-3 px-6">${{ number_format($product->Price, 2) }}</td>
+                                    <td class="py-3 px-6 text-center">{{ $product->Quantity_on_Hand }}</td>
                                     <td class="py-3 px-6 text-center">
-                                        <a href="#" class="text-blue-500 hover:text-blue-700 mr-4"><i class="fas fa-edit"></i></a>
-                                        <a href="#" class="text-red-500 hover:text-red-700"><i class="fas fa-trash"></i></a>
+                                        <a href="{{ route('admin.products.edit', $product) }}" class="text-blue-500 hover:text-blue-700 mr-4"><i class="fas fa-edit"></i></a>
+                                        <form action="{{ route('admin.products.destroy', $product) }}" method="POST" class="inline-block">
+                                            @csrf
+                                            @method('DELETE')
+                                            <button type="submit" class="text-red-500 hover:text-red-700" onclick="return confirm('Are you sure you want to delete this product?')"><i class="fas fa-trash"></i></button>
+                                        </form>
                                     </td>
                                 </tr>
-                            @endforeach
+                            @empty
+                                <tr>
+                                    <td colspan="6" class="py-6 text-center text-gray-500">No products found.</td>
+                                </tr>
+                            @endforelse
                         </tbody>
                     </table>
+                </div>
+
+                <!-- Pagination Links -->
+                <div class="mt-4">
+                    {{ $products->links() }}
                 </div>
             </div>
         </div>

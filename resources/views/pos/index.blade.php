@@ -6,15 +6,21 @@
         <main class="w-2/3 p-6 flex flex-col bg-gray-100">
             <div class="relative mb-6">
                 <span class="absolute inset-y-0 left-0 flex items-center pl-3"><i class="fas fa-search text-gray-400"></i></span>
-                <input type="text" placeholder="Search for products..." class="w-full pl-10 pr-4 py-3 border rounded-lg bg-white focus:outline-none focus:ring-2 focus:ring-pink-500">
+                <input type="text" id="product-search" placeholder="Search for products..." class="w-full pl-10 pr-4 py-3 border rounded-lg bg-white focus:outline-none focus:ring-2 focus:ring-pink-500">
             </div>
-            <div class="flex-1 overflow-y-auto custom-scrollbar pr-2">
+            <div id="product-list" class="flex-1 overflow-y-auto custom-scrollbar pr-2">
                 <div class="grid grid-cols-2 md:grid-cols-3 lg:grid-cols-4 gap-6">
                     @foreach ($products as $product)
-                        <div class="product-card bg-white rounded-lg shadow-md p-4 flex flex-col items-center text-center cursor-pointer hover:shadow-xl hover:scale-105 transition-transform" data-id="{{ $product['id'] }}" data-name="{{ $product['name'] }}" data-price="{{ $product['price'] }}">
-                            <img src="{{ $product['image'] }}" class="w-24 h-24 object-cover mb-3 rounded-md">
-                            <h3 class="font-semibold text-sm">{{ $product['name'] }}</h3>
-                            <p class="text-gray-600 font-bold mt-1">${{ number_format($product['price'], 2) }}</p>
+                        <div class="product-card bg-white rounded-lg shadow-md p-4 flex flex-col items-center text-center cursor-pointer hover:shadow-xl hover:scale-105 transition-transform" data-id="{{ $product->Product_ID }}">
+                            @if ($product->image)
+                                <img src="{{ asset('storage/' . $product->image) }}" alt="{{ $product->Product_Name }}" class="w-24 h-24 object-cover mb-3 rounded-md">
+                            @else
+                                <div class="w-24 h-24 bg-gray-200 rounded-md flex items-center justify-center mb-3">
+                                    <span class="text-xs text-gray-500">No Image</span>
+                                </div>
+                            @endif
+                            <h3 class="font-semibold text-sm">{{ $product->Product_Name }}</h3>
+                            <p class="text-gray-600 font-bold mt-1">${{ number_format($product->Price, 2) }}</p>
                         </div>
                     @endforeach
                 </div>
@@ -47,8 +53,10 @@
     <script src="https://code.jquery.com/jquery-3.6.0.min.js"></script>
     <script>
         $(document).ready(function() {
-            const cart = {};
-            function renderCart() {
+            let cart = {};
+
+            function renderCart(cartData) {
+                cart = cartData;
                 const cartItemsContainer = $('#cart-items');
                 cartItemsContainer.empty();
                 let subtotal = 0;
@@ -59,7 +67,19 @@
                         const item = cart[id];
                         const itemTotal = item.price * item.quantity;
                         subtotal += itemTotal;
-                        const itemHtml = `<div class="cart-item flex items-center justify-between py-3 border-b" data-id="${id}"><div class="w-2/3"><p class="font-semibold text-sm">${item.name}</p></div><div class="flex items-center space-x-2"><span>${item.quantity}</span></div><div class="w-1/6 text-right font-semibold">${itemTotal.toFixed(2)}</div></div>`;
+                        const itemHtml = `
+                            <div class="cart-item flex items-center justify-between py-3 border-b" data-id="${id}">
+                                <div class="w-2/3">
+                                    <p class="font-semibold text-sm">${item.name}</p>
+                                    <p class="text-xs text-gray-500">SKU: ${item.sku}</p>
+                                </div>
+                                <div class="flex items-center space-x-2">
+                                    <button class="update-quantity-btn text-pink-500 hover:text-pink-700" data-id="${id}" data-action="decrement">-</button>
+                                    <span>${item.quantity}</span>
+                                    <button class="update-quantity-btn text-pink-500 hover:text-pink-700" data-id="${id}" data-action="increment">+</button>
+                                </div>
+                                <div class="w-1/6 text-right font-semibold">$${itemTotal.toFixed(2)}</div>
+                            </div>`;
                         cartItemsContainer.append(itemHtml);
                     }
                 }
@@ -69,18 +89,100 @@
                 let discount = 0;
                 if (promoType === 'percentage') discount = subtotal * (promoValue / 100);
                 const total = subtotal - discount;
-                $('#subtotal').text(`${subtotal.toFixed(2)}`);
-                $('#discount').text(`-${discount.toFixed(2)}`);
-                $('#total').text(`${total.toFixed(2)}`);
+                $('#subtotal').text(`$${subtotal.toFixed(2)}`);
+                $('#discount').text(`-$${discount.toFixed(2)}`);
+                $('#total').text(`$${total.toFixed(2)}`);
                 $('#complete-sale').prop('disabled', total <= 0);
             }
-            $('.product-card').on('click', function() {
-                const id = $(this).data('id'), name = $(this).data('name'), price = parseFloat($(this).data('price'));
-                if (cart[id]) { cart[id].quantity++; } else { cart[id] = { name, price, quantity: 1 }; }
-                renderCart();
+
+            function getCart() {
+                $.ajax({
+                    url: "{{ route('ajax.cart.get') }}",
+                    method: 'GET',
+                    success: function(response) {
+                        renderCart(response);
+                    }
+                });
+            }
+
+            function addToCart(productId) {
+                 $.ajax({
+                    url: "{{ route('ajax.cart.add') }}",
+                    method: 'POST',
+                    data: { 
+                        _token: "{{ csrf_token() }}",
+                        product_id: productId
+                    },
+                    success: function(response) {
+                        renderCart(response.cart);
+                    }
+                });
+            }
+
+            function updateCart(productId, quantity) {
+                $.ajax({
+                    url: "{{ route('ajax.cart.update') }}",
+                    method: 'POST',
+                    data: {
+                        _token: "{{ csrf_token() }}",
+                        id: productId,
+                        quantity: quantity
+                    },
+                    success: function(response) {
+                        renderCart(response.cart);
+                    }
+                });
+            }
+
+            function attachProductCardHandler() {
+                 $('#product-list').on('click', '.product-card', function() {
+                    const id = $(this).data('id');
+                    addToCart(id);
+                });
+            }
+
+            $('#cart-items').on('click', '.update-quantity-btn', function() {
+                const id = $(this).data('id');
+                const action = $(this).data('action');
+                let quantity = cart[id].quantity;
+
+                if (action === 'increment') {
+                    quantity++;
+                } else if (action === 'decrement') {
+                    quantity--;
+                }
+                updateCart(id, quantity);
             });
-            $('#promotion').on('change', renderCart);
-            renderCart();
+
+            $('#product-search').on('keyup', function() {
+                const query = $(this).val();
+                $.ajax({
+                    url: "{{ route('ajax.products.search') }}",
+                    method: 'GET',
+                    data: { query: query },
+                    success: function(products) {
+                        const productList = $('#product-list .grid');
+                        productList.empty();
+                        if (products.length > 0) {
+                            products.forEach(function(product) {
+                                const productHtml = `
+                                    <div class="product-card bg-white rounded-lg shadow-md p-4 flex flex-col items-center text-center cursor-pointer hover:shadow-xl hover:scale-105 transition-transform" data-id="${product.Product_ID}">
+                                        ${product.image ? `<img src="/storage/${product.image}" alt="${product.Product_Name}" class="w-24 h-24 object-cover mb-3 rounded-md">` : '<div class="w-24 h-24 bg-gray-200 rounded-md flex items-center justify-center mb-3"><span class="text-xs text-gray-500">No Image</span></div>'}
+                                        <h3 class="font-semibold text-sm">${product.Product_Name}</h3>
+                                        <p class="text-gray-600 font-bold mt-1">$${parseFloat(product.Price).toFixed(2)}</p>
+                                    </div>`;
+                                productList.append(productHtml);
+                            });
+                        } else {
+                            productList.html('<p class="text-gray-500 col-span-full">No products found.</p>');
+                        }
+                    }
+                });
+            });
+
+            $('#promotion').on('change', function() { renderCart(cart); });
+            attachProductCardHandler();
+            getCart();
         });
     </script>
 @endsection
