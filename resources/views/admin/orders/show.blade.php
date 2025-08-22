@@ -9,6 +9,7 @@
                 <div>
                     <h1 class="text-3xl font-bold text-gray-900">Order #{{ $order->Order_ID }}</h1>
                     <p class="text-gray-600 mt-2">Placed on {{ $order->Order_Date->format('F j, Y \a\t g:i A') }}</p>
+                    <p class="text-gray-600 mt-1">Staff: <span class="font-medium text-gray-900">{{ optional($order->staff)->Staff_Name ?? 'N/A' }}</span></p>
                 </div>
                 <div class="text-right">
                     <div class="text-2xl font-bold text-pink-600">${{ number_format($order->Final_Amount, 2) }}</div>
@@ -159,9 +160,10 @@
                 <i class="fas fa-arrow-left mr-2"></i> Back to Orders
             </a>
             <div class="space-x-3">
-                <button onclick="window.print()" class="bg-blue-500 hover:bg-blue-600 text-white font-bold py-2 px-4 rounded-lg transition-colors">
-                    <i class="fas fa-print mr-2"></i> Print Receipt
-                </button>
+                <a href="{{ route('admin.orders.receipt', $order) }}" class="bg-pink-600 hover:bg-pink-700 text-white font-bold py-2 px-4 rounded-lg transition-colors">
+                    <i class="fas fa-receipt mr-2"></i> Print Receipt
+                </a>
+                
                 <a href="#" class="bg-green-500 hover:bg-green-600 text-white font-bold py-2 px-4 rounded-lg transition-colors">
                     <i class="fas fa-envelope mr-2"></i> Email Receipt
                 </a>

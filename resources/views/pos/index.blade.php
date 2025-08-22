@@ -86,7 +86,13 @@
                     <label for="promotion" class="block text-sm font-medium text-gray-700 mb-1">Promotion</label>
                     <select id="promotion" class="w-full p-2 border rounded-lg bg-gray-50 focus:outline-none focus:ring-2 focus:ring-pink-500">
                         <option value="0" data-type="none" data-value="0">No Promotion</option>
-                        <option value="1" data-type="percentage" data-value="10">10% Off Total Order</option>
+                        @isset($promotions)
+                            @foreach($promotions as $promo)
+                                <option value="{{ $promo->Promotion_ID }}" data-type="{{ strtolower($promo->Discount_Type) }}" data-value="{{ $promo->Discount_Value }}">
+                                    {{ $promo->Promotion_Name }} ({{ strtolower($promo->Discount_Type) == 'percentage' ? $promo->Discount_Value.'%' : '$'.$promo->Discount_Value }})
+                                </option>
+                            @endforeach
+                        @endisset
                     </select>
                 </div>
 
@@ -211,6 +217,7 @@
             height: 100%;
             overflow-y: auto;
             overflow-x: hidden;
+            padding-top: 1rem; /* extra space above first item */
         }
 
         .bottom-section {
@@ -222,8 +229,8 @@
 
         /* Ensure cart items don't overlap */
         .cart-item {
-            margin-bottom: 0.5rem;
-            padding: 0.75rem;
+            margin-bottom: 1rem; /* more space between items */
+            padding: 0.9rem; /* slightly larger internal padding */
             background: white;
             border-radius: 0.5rem;
             box-shadow: 0 1px 3px rgba(0, 0, 0, 0.1);
@@ -521,6 +528,10 @@
                     },
                     success: function(response) {
                         alert(`Thank you for your purchase! Order #${response.order_id} completed for ${response.customer_name} via ${response.payment_method}`);
+                        // Open receipt in a new tab
+                        const receiptTemplate = "{{ route('admin.orders.receipt', ['order' => 'ORDER_ID_PLACEHOLDER']) }}";
+                        const receiptUrl = receiptTemplate.replace('ORDER_ID_PLACEHOLDER', encodeURIComponent(response.order_id));
+                        window.open(receiptUrl, '_blank');
                         getCart();
                         // Reset customer fields
                         $('#external_customer_name').val('');
@@ -583,6 +594,30 @@
             attachProductCardHandler();
             getCart();
             updatePaymentMethodSelection();
+
+            function adjustCartPaddingForFooter() {
+                const footer = document.querySelector('.bottom-section');
+                const cartScroll = document.querySelector('#cart-items');
+                if (!footer || !cartScroll) return;
+                const footerHeight = footer.getBoundingClientRect().height;
+                cartScroll.style.paddingBottom = Math.ceil(footerHeight + 24) + 'px'; // extra buffer at bottom
+            }
+
+            // Observe footer size and cart mutations to handle zoom (e.g., 125%) and content changes
+            const footerEl = document.querySelector('.bottom-section');
+            if (window.ResizeObserver && footerEl) {
+                const ro = new ResizeObserver(() => adjustCartPaddingForFooter());
+                ro.observe(footerEl);
+            }
+            const cartEl = document.querySelector('#cart-items');
+            if (window.MutationObserver && cartEl) {
+                const mo = new MutationObserver(() => adjustCartPaddingForFooter());
+                mo.observe(cartEl, { childList: true, subtree: true });
+            }
+            window.addEventListener('load', adjustCartPaddingForFooter);
+            document.addEventListener('visibilitychange', () => {
+                if (!document.hidden) adjustCartPaddingForFooter();
+            });
         });
     </script>
 @endsection

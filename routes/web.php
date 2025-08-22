@@ -34,9 +34,8 @@ Route::middleware(['auth'])->group(function () {
     });
 
     // Promotions Route
-    Route::get('/promotions', function () {
-        return view('promotions.index');
-    })->name('promotions.index');
+    Route::resource('promotions', \App\Http\Controllers\PromotionController::class)->only(['index','create','store','edit','update','destroy']);
+    Route::patch('/promotions/{promotion}/toggle', [\App\Http\Controllers\PromotionController::class, 'toggle'])->name('promotions.toggle');
 
     // Profile Routes
     Route::get('/profile', [ProfileController::class, 'edit'])->name('profile.edit');
@@ -65,6 +64,11 @@ Route::middleware(['auth', 'verified', 'role:admin|mananger'])->prefix('admin')-
     // Order History
     Route::get('orders', [OrderController::class, 'index'])->name('orders.index');
     Route::get('orders/{order}', [OrderController::class, 'show'])->name('orders.show');
+    Route::get('orders/{order}/receipt', [OrderController::class, 'receipt'])->name('orders.receipt');
+
+    // Roles & Permissions
+    Route::get('roles-permissions', [\App\Http\Controllers\Admin\RolePermissionController::class, 'index'])->name('roles-permissions.index');
+    Route::patch('roles-permissions/{user}', [\App\Http\Controllers\Admin\RolePermissionController::class, 'update'])->name('roles-permissions.update');
 
     // User Management
     Route::resource('users', UserController::class);

@@ -16,6 +16,7 @@
                             <tr>
                                 <th class="py-3 px-6 text-left">Order ID</th>
                                 <th class="py-3 px-6 text-left">Customer</th>
+                                <th class="py-3 px-6 text-left">Staff</th>
                                 <th class="py-3 px-6 text-left">Date</th>
                                 <th class="py-3 px-6 text-center">Total Amount</th>
                                 <th class="py-3 px-6 text-center">Payment Method</th>
@@ -34,6 +35,7 @@
                                             External Customer
                                         @endif
                                     </td>
+                                    <td class="py-3 px-6">{{ optional($order->staff)->Staff_Name ?? '—' }}</td>
                                     <td class="py-3 px-6">{{ $order->Order_Date->format('M j, Y') }}</td>
                                     <td class="py-3 px-6 text-center">${{ number_format($order->Final_Amount, 2) }}</td>
                                     <td class="py-3 px-6 text-center">

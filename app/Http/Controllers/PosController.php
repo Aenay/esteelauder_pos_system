@@ -6,6 +6,7 @@ use App\Models\Product;
 use App\Models\Order;
 use App\Models\OrderDetail;
 use App\Models\Customer;
+use App\Models\Promotion;
 use Illuminate\Http\Request;
 use Illuminate\Support\Facades\Auth;
 use Illuminate\Support\Facades\DB;
@@ -19,7 +20,18 @@ class PosController extends Controller
     {
         $products = Product::all();
         $customers = Customer::all(); // Get all customers for internal selection
-        return view('pos.index', compact('products', 'customers'));
+        $promotions = Promotion::where('Is_Active', true)
+            ->where(function ($q) {
+                $today = now()->toDateString();
+                $q->whereNull('Start_Date')->orWhere('Start_Date', '<=', $today);
+            })
+            ->where(function ($q) {
+                $today = now()->toDateString();
+                $q->whereNull('End_Date')->orWhere('End_Date', '>=', $today);
+            })
+            ->orderBy('Promotion_Name')
+            ->get();
+        return view('pos.index', compact('products', 'customers', 'promotions'));
     }
 
     public function getCart()

@@ -62,18 +62,28 @@
                 <a href="{{ url('/pos') }}" class="sidebar-link flex items-center px-4 py-2 rounded-lg {{ request()->is('pos') ? 'active' : '' }} dark:hover:bg-pink-600 dark:active:bg-pink-700">
                     <i class="fas fa-cash-register w-6"></i><span>POS</span>
                 </a>
+                @role('admin|store-manager')
                 <a href="{{ route('admin.products.index') }}" class="sidebar-link flex items-center px-4 py-2 rounded-lg {{ request()->is('products') ? 'active' : '' }} dark:hover:bg-pink-600 dark:active:bg-pink-700">
                     <i class="fas fa-box-open w-6"></i><span>Products</span>
                 </a>
                 <a href="{{ route('admin.orders.index')  }}" class="sidebar-link flex items-center px-4 py-2 rounded-lg {{ request()->is('orders') ? 'active' : '' }} dark:hover:bg-pink-600 dark:active:bg-pink-700">
                     <i class="fas fa-receipt w-6"></i><span>Orders</span>
                 </a>
+                @endrole
+                @role('admin')
+                <a href="{{ route('admin.roles-permissions.index') }}" class="flex items-center px-4 py-2 rounded {{ request()->routeIs('admin.roles-permissions.*') ? 'bg-pink-600 text-white' : 'text-gray-300 hover:bg-pink-700 hover:text-white' }}">
+                    <i class="fas fa-user-shield w-5"></i>
+                    <span class="ml-3">Roles & Permissions</span>
+                </a>
+                @endrole
                 <a href="{{ route('promotions.index') }}" class="sidebar-link flex items-center px-4 py-2 rounded-lg {{ request()->is('promotions') ? 'active' : '' }} dark:hover:bg-pink-600 dark:active:bg-pink-700">
                     <i class="fas fa-tags w-6"></i><span>Promotions</span>
                 </a>
+                @role('admin|store-manager')
                 <a href="{{ route('admin.customers.index') }}" class="sidebar-link flex items-center px-4 py-2 rounded-lg {{ request()->is('admin/customers*') ? 'active' : '' }} dark:hover:bg-pink-600 dark:active:bg-pink-700">
                     <i class="fas fa-users w-6"></i><span>Customers</span>
                 </a>
+                @endrole
                 @role('admin')
                 <a href="{{ route('admin.users.index') }}" class="sidebar-link flex items-center px-4 py-2 rounded-lg {{ request()->is('admin/users') ? 'active' : '' }} dark:hover:bg-pink-600 dark:active:bg-pink-700">
                     <i class="fas fa-user-shield w-6"></i><span>Admin</span>

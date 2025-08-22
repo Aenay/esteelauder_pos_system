@@ -10,14 +10,20 @@ class OrderController extends Controller
 {
     public function index()
     {
-        $orders = Order::with(['customer', 'orderDetails.product'])->get();
+        $orders = Order::with(['customer', 'orderDetails.product', 'staff'])->get();
         return view('admin.orders.index', compact('orders'));
     }
 
     public function show(Order $order)
     {
-        $order->load(['customer', 'orderDetails.product']);
+        $order->load(['customer', 'orderDetails.product', 'staff']);
         return view('admin.orders.show', compact('order'));
+    }
+
+    public function receipt(Order $order)
+    {
+        $order->load(['customer', 'orderDetails.product', 'staff']);
+        return view('admin.orders.receipt', compact('order'));
     }
 
     public function update(Request $request, Order $order)
