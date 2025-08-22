@@ -6,7 +6,6 @@ use App\Http\Controllers\Admin\ProductController;
 use App\Http\Controllers\Admin\CustomerController;
 use App\Http\Controllers\Admin\SupplierController;
 use App\Http\Controllers\Admin\PurchaseOrderController;
-use App\Http\Controllers\Admin\DeliveryController;
 use App\Http\Controllers\Admin\OrderController;
 use App\Http\Controllers\Admin\DashboardController as AdminDashboardController;
 use App\Http\Controllers\PosController;
@@ -18,10 +17,12 @@ require __DIR__.'/auth.php';
 // Main POS Interface
 Route::middleware(['auth'])->group(function () {
     Route::get('/pos', [PosController::class, 'index'])->name('pos.index');
+    Route::post('/pos/complete-sale', [PosController::class, 'completeSale'])->name('pos.complete_sale');
 
     // AJAX Endpoints for POS
     Route::prefix('ajax')->name('ajax.')->group(function () {
         Route::get('products/search', [PosController::class, 'searchProducts'])->name('products.search');
+        Route::get('customers/search', [PosController::class, 'searchCustomers'])->name('customers.search');
         Route::prefix('cart')->name('cart.')->group(function () {
             Route::get('/', [PosController::class, 'getCart'])->name('get');
             Route::post('add', [PosController::class, 'addToCart'])->name('add');
@@ -61,12 +62,9 @@ Route::middleware(['auth', 'verified', 'role:admin|mananger'])->prefix('admin')-
     Route::resource('purchase-orders', PurchaseOrderController::class);
     Route::post('purchase-orders/{id}/receive', [PurchaseOrderController::class, 'receiveStock'])->name('purchase-orders.receive');
 
-    // Delivery Management
-    Route::get('deliveries', [DeliveryController::class, 'index'])->name('deliveries.index');
-    Route::post('deliveries/{order}/update-status', [DeliveryController::class, 'updateStatus'])->name('deliveries.update-status');
-
     // Order History
     Route::get('orders', [OrderController::class, 'index'])->name('orders.index');
+    Route::get('orders/{order}', [OrderController::class, 'show'])->name('orders.show');
 
     // User Management
     Route::resource('users', UserController::class);
@@ -79,7 +77,7 @@ Route::middleware(['auth', 'verified', 'role:admin|mananger'])->prefix('admin')-
 
 // Welcome page
 Route::get('/', function () {
-    return view('welcome');
+    return view('auth.login');
 });
 
 // Dashboard for authenticated users

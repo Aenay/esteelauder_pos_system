@@ -18,24 +18,66 @@
                                 <th class="py-3 px-6 text-left">Customer</th>
                                 <th class="py-3 px-6 text-left">Date</th>
                                 <th class="py-3 px-6 text-center">Total Amount</th>
-                                <th class="py-3 px-6 text-center">Status</th>
+                                <th class="py-3 px-6 text-center">Payment Method</th>
+                                <th class="py-3 px-6 text-center">Payment Status</th>
                                 <th class="py-3 px-6 text-center">Actions</th>
                             </tr>
                         </thead>
                         <tbody class="text-gray-700">
                             @foreach ($orders as $order)
                                 <tr class="border-b">
-                                    <td class="py-3 px-6">#{{ $order['id'] }}</td>
-                                    <td class="py-3 px-6 font-medium">{{ $order['customer'] }}</td>
-                                    <td class="py-3 px-6">{{ $order['date'] }}</td>
-                                    <td class="py-3 px-6 text-center">${{ number_format($order['amount'], 2) }}</td>
+                                    <td class="py-3 px-6">#{{ $order->Order_ID }}</td>
+                                    <td class="py-3 px-6 font-medium">
+                                        @if ($order->customer_type === 'internal' && $order->customer)
+                                            {{ $order->customer->Customer_Name }} (Member)
+                                        @else
+                                            External Customer
+                                        @endif
+                                    </td>
+                                    <td class="py-3 px-6">{{ $order->Order_Date->format('M j, Y') }}</td>
+                                    <td class="py-3 px-6 text-center">${{ number_format($order->Final_Amount, 2) }}</td>
                                     <td class="py-3 px-6 text-center">
-                                        <span class="{{ $order['status'] == 'Completed' ? 'bg-green-200 text-green-700' : 'bg-yellow-200 text-yellow-700' }} py-1 px-3 rounded-full text-xs">
-                                            {{ $order['status'] }}
-                                        </span>
+                                        @switch($order->payment_method)
+                                            @case('card')
+                                                <span class="inline-flex items-center px-2 py-1 rounded-full text-xs bg-blue-100 text-blue-800">
+                                                    <i class="fas fa-credit-card mr-1"></i> Card
+                                                </span>
+                                                @break
+                                            @case('paypal')
+                                                <span class="inline-flex items-center px-2 py-1 rounded-full text-xs bg-blue-100 text-blue-800">
+                                                    <i class="fab fa-paypal mr-1"></i> PayPal
+                                                </span>
+                                                @break
+                                            @case('apple')
+                                                <span class="inline-flex items-center px-2 py-1 rounded-full text-xs bg-black text-white">
+                                                    <i class="fab fa-apple-pay mr-1"></i> Apple Pay
+                                                </span>
+                                                @break
+                                            @default
+                                                <span class="inline-flex items-center px-2 py-1 rounded-full text-xs bg-gray-100 text-gray-800">
+                                                    {{ ucfirst($order->payment_method ?? 'N/A') }}
+                                                </span>
+                                        @endswitch
                                     </td>
                                     <td class="py-3 px-6 text-center">
-                                        <a href="#" class="text-blue-500 hover:text-blue-700"><i class="fas fa-eye"></i></a>
+                                        @if($order->payment_status === 'completed')
+                                            <span class="inline-flex items-center px-2 py-1 rounded-full text-xs bg-green-100 text-green-800">
+                                                <i class="fas fa-check-circle mr-1"></i> Completed
+                                            </span>
+                                        @elseif($order->payment_status === 'pending')
+                                            <span class="inline-flex items-center px-2 py-1 rounded-full text-xs bg-yellow-100 text-yellow-800">
+                                                <i class="fas fa-clock mr-1"></i> Pending
+                                            </span>
+                                        @else
+                                            <span class="inline-flex items-center px-2 py-1 rounded-full text-xs bg-gray-100 text-gray-800">
+                                                {{ ucfirst($order->payment_status ?? 'N/A') }}
+                                            </span>
+                                        @endif
+                                    </td>
+                                    <td class="py-3 px-6 text-center">
+                                        <a href="{{ route('admin.orders.show', $order) }}" class="text-blue-500 hover:text-blue-700 font-medium">
+                                            <i class="fas fa-eye mr-1"></i> View
+                                        </a>
                                     </td>
                                 </tr>
                             @endforeach

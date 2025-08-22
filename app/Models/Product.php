@@ -10,6 +10,8 @@ class Product extends Model
     use HasFactory;
 
     protected $primaryKey = 'Product_ID';
+    protected $keyType = 'int';
+    public $incrementing = true;
 
     protected $fillable = [
         'Product_Name',
@@ -20,13 +22,18 @@ class Product extends Model
         'image'
     ];
 
+    protected $casts = [
+        'Price' => 'decimal:2',
+        'Quantity_on_Hand' => 'integer',
+    ];
+
     public function orderDetails()
     {
-        return $this->hasMany(OrderDetail::class);
+        return $this->hasMany(OrderDetail::class, 'Product_ID', 'Product_ID');
     }
 
     public function purchaseDetails()
     {
-        return $this->hasMany(PurchaseDetail::class);
+        return $this->hasMany(PurchaseDetail::class, 'Product_ID', 'Product_ID');
     }
 }

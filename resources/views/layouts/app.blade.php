@@ -15,6 +15,7 @@
     <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/6.4.2/css/all.min.css">
 
     <!-- Scripts -->
+    <script src="https://code.jquery.com/jquery-3.6.0.min.js"></script>
     @vite(['resources/css/app.css', 'resources/js/app.js'])
     <style>
         body {
@@ -70,7 +71,7 @@
                 <a href="{{ route('promotions.index') }}" class="sidebar-link flex items-center px-4 py-2 rounded-lg {{ request()->is('promotions') ? 'active' : '' }} dark:hover:bg-pink-600 dark:active:bg-pink-700">
                     <i class="fas fa-tags w-6"></i><span>Promotions</span>
                 </a>
-                <a href="#" class="sidebar-link flex items-center px-4 py-2 rounded-lg dark:hover:bg-pink-600 dark:active:bg-pink-700">
+                <a href="{{ route('admin.customers.index') }}" class="sidebar-link flex items-center px-4 py-2 rounded-lg {{ request()->is('admin/customers*') ? 'active' : '' }} dark:hover:bg-pink-600 dark:active:bg-pink-700">
                     <i class="fas fa-users w-6"></i><span>Customers</span>
                 </a>
                 @role('admin')
