@@ -17,14 +17,14 @@
                             data-price="{{ $product->Price }}"
                             data-stock="{{ $product->Quantity_on_Hand }}">
                             @if ($product->image)
-                                <img src="{{ asset('storage/' . $product->image) }}" alt="{{ $product->Product_Name }}" class="w-24 h-24 object-cover mb-3 rounded-md">
+                                <img src="{{ asset('storage/' . $product->image) }}" alt="{{ $product->Product_Name }}" class="w-32 h-32 object-cover mb-3 rounded-md">
                             @else
-                                <div class="w-24 h-24 bg-gray-200 rounded-md flex items-center justify-center mb-3">
-                                    <span class="text-xs text-gray-500">No Image</span>
+                                <div class="w-32 h-32 bg-gray-200 rounded-md flex items-center justify-center mb-3">
+                                    <span class="text-sm text-gray-500">No Image</span>
                                 </div>
                             @endif
-                            <h3 class="font-semibold text-sm">{{ $product->Product_Name }}</h3>
-                            <p class="text-gray-600 font-bold mt-1">${{ number_format($product->Price, 2) }}</p>
+                            <h3 class="font-semibold text-sm leading-tight mb-1">{{ $product->Product_Name }}</h3>
+                            <p class="text-gray-600 font-bold text-base">${{ number_format($product->Price, 2) }}</p>
                             <p class="text-sm {{ $product->Quantity_on_Hand > 0 ? 'text-green-600' : 'text-red-600' }}">
                                 Stock: {{ $product->Quantity_on_Hand }}
                             </p>
@@ -35,56 +35,62 @@
         </main>
         <!-- Order Details -->
         <aside class="w-1/3 bg-white shadow-lg flex flex-col pos-sidebar">
-            <div class="p-6 flex-shrink-0">
-                <h2 class="text-2xl font-bold mb-4 border-b pb-4">Current Order</h2>
+            <div class="p-4 flex-shrink-0">
+                <h2 class="text-lg font-bold mb-3 border-b pb-2">Current Order</h2>
                 
                 <!-- Customer Type Section -->
-                <div class="mb-4">
-                    <label class="block text-sm font-medium text-gray-700 mb-2">Customer Type</label>
-                    <div class="flex items-center space-x-4">
+                <div class="mb-3">
+                    <label class="block text-xs font-medium text-gray-700 mb-1">Customer Type</label>
+                    <div class="flex items-center space-x-2">
                         <label class="inline-flex items-center">
                             <input type="radio" name="customer_type" value="external" class="form-radio text-pink-600" checked>
-                            <span class="ml-2 text-gray-700">External Customer</span>
+                            <span class="ml-1 text-xs text-gray-700">External</span>
                         </label>
                         <label class="inline-flex items-center">
                             <input type="radio" name="customer_type" value="internal" class="form-radio text-pink-600">
-                            <span class="ml-2 text-gray-700">Internal Customer (Member)</span>
+                            <span class="ml-1 text-xs text-gray-700">Member</span>
                         </label>
                     </div>
                 </div>
 
                 <!-- Customer Fields Section -->
-                <div class="mb-4">
+                <div class="mb-3">
                     <div id="external-customer-fields">
-                        <label for="external_customer_name" class="block text-sm font-medium text-gray-700 mb-1">Customer Name (Optional)</label>
-                        <input type="text" id="external_customer_name" class="w-full p-2 border rounded-lg bg-gray-50 focus:outline-none focus:ring-2 focus:ring-pink-500" placeholder="e.g., Walk-in Customer">
+                        <label for="external_customer_name" class="block text-xs font-medium text-gray-700 mb-1">Customer Name (Optional)</label>
+                        <input type="text" id="external_customer_name" class="w-full p-1.5 border rounded-md bg-gray-50 focus:outline-none focus:ring-2 focus:ring-pink-500 text-xs" placeholder="Walk-in Customer">
                     </div>
 
                     <div id="internal-customer-fields" class="hidden">
-                        <label for="internal_customer_id" class="block text-sm font-medium text-gray-700 mb-1">Selected Member</label>
+                        <label for="internal_customer_id" class="block text-xs font-medium text-gray-700 mb-1">Selected Member</label>
                         <div class="flex items-center">
-                            <input type="text" id="internal_customer_display_name" class="w-full p-2 border rounded-lg bg-gray-100 cursor-not-allowed" readonly placeholder="No member selected">
+                            <input type="text" id="internal_customer_display_name" class="w-full p-1.5 border rounded-md bg-gray-100 cursor-not-allowed text-xs" readonly placeholder="No member selected">
                             <input type="hidden" id="internal_customer_id">
-                            <button type="button" id="select-member-btn" class="ml-2 bg-blue-500 hover:bg-blue-600 text-white font-bold py-2 px-4 rounded-lg transition-colors">Select Member</button>
+                            <button type="button" id="select-member-btn" class="ml-2 bg-blue-500 hover:bg-blue-600 text-white font-bold py-1.5 px-2 rounded-md transition-colors text-xs">Select</button>
                         </div>
                     </div>
                 </div>
             </div>
 
-            <!-- Cart Items Section - Scrollable area -->
-            <div class="cart-section px-6">
-                <h3 class="text-sm font-medium text-gray-700 mb-2">Cart Items</h3>
+            <!-- Cart Items Section - Compact and scrollable -->
+            <div class="cart-section px-4 flex-1 min-h-0">
+                <div class="flex items-center justify-between mb-2">
+                    <h3 class="text-xs font-medium text-gray-700">Cart Items</h3>
+                    <span id="cart-count" class="text-xs bg-pink-100 text-pink-800 px-2 py-1 rounded-full">0</span>
+                </div>
                 <div id="cart-items" class="cart-items-container custom-scrollbar">
-                    <div class="text-center text-gray-500 pt-10"><i class="fas fa-shopping-cart fa-2x mb-2"></i><p>Your cart is empty</p></div>
+                    <div class="text-center text-gray-500 pt-4">
+                        <i class="fas fa-shopping-cart text-lg mb-1"></i>
+                        <p class="text-xs">Your cart is empty</p>
+                    </div>
                 </div>
             </div>
 
-            <!-- Bottom Section - Fixed at bottom -->
-            <div class="bottom-section px-6 pb-6 space-y-4">
+            <!-- Bottom Section - Compact and functional -->
+            <div class="bottom-section px-4 pb-3 space-y-2">
                 <!-- Promotion Section -->
                 <div>
-                    <label for="promotion" class="block text-sm font-medium text-gray-700 mb-1">Promotion</label>
-                    <select id="promotion" class="w-full p-2 border rounded-lg bg-gray-50 focus:outline-none focus:ring-2 focus:ring-pink-500">
+                    <label for="promotion" class="block text-xs font-medium text-gray-700 mb-1">Promotion</label>
+                    <select id="promotion" class="w-full p-1.5 border rounded-md bg-gray-50 focus:outline-none focus:ring-2 focus:ring-pink-500 text-xs">
                         <option value="0" data-type="none" data-value="0">No Promotion</option>
                         @isset($promotions)
                             @foreach($promotions as $promo)
@@ -97,42 +103,42 @@
                 </div>
 
                 <!-- Totals Section -->
-                <div class="border-t pt-4 space-y-2 text-md">
+                <div class="border-t pt-2 space-y-1 text-xs">
                     <div class="flex justify-between"><span>Subtotal</span><span id="subtotal">$0.00</span></div>
                     <div class="flex justify-between text-pink-600"><span>Discount</span><span id="discount">-$0.00</span></div>
-                    <div class="flex justify-between font-bold text-xl border-t pt-2 mt-2"><span>Total</span><span id="total">$0.00</span></div>
+                    <div class="flex justify-between font-bold text-base border-t pt-1 mt-1"><span>Total</span><span id="total">$0.00</span></div>
                 </div>
                 
                 <!-- Payment Method Selection -->
                 <div>
-                    <label class="block text-sm font-medium text-gray-700 mb-2">Payment Method</label>
-                    <div class="grid grid-cols-3 gap-3">
+                    <label class="block text-xs font-medium text-gray-700 mb-1">Payment Method</label>
+                    <div class="grid grid-cols-3 gap-1">
                         <label class="payment-method-option cursor-pointer">
                             <input type="radio" name="payment_method" value="card" class="sr-only" checked>
-                            <div class="border-2 border-gray-200 rounded-lg p-3 text-center hover:border-pink-500 transition-colors payment-method-card">
-                                <i class="fas fa-credit-card text-2xl text-gray-600 mb-2"></i>
-                                <div class="text-sm font-medium">Card</div>
+                            <div class="border-2 border-gray-200 rounded-md p-1.5 text-center hover:border-pink-500 transition-colors payment-method-card">
+                                <i class="fas fa-credit-card text-sm text-gray-600 mb-1"></i>
+                                <div class="text-xs font-medium">Card</div>
                             </div>
                         </label>
                         <label class="payment-method-option cursor-pointer">
                             <input type="radio" name="payment_method" value="paypal" class="sr-only">
-                            <div class="border-2 border-gray-200 rounded-lg p-3 text-center hover:border-pink-500 transition-colors payment-method-card">
-                                <i class="fab fa-paypal text-2xl text-blue-600 mb-2"></i>
-                                <div class="text-sm font-medium">PayPal</div>
+                            <div class="border-2 border-gray-200 rounded-md p-1.5 text-center hover:border-pink-500 transition-colors payment-method-card">
+                                <i class="fab fa-paypal text-sm text-blue-600 mb-1"></i>
+                                <div class="text-xs font-medium">PayPal</div>
                             </div>
                         </label>
                         <label class="payment-method-option cursor-pointer">
                             <input type="radio" name="payment_method" value="apple" class="sr-only">
-                            <div class="border-2 border-gray-200 rounded-lg p-3 text-center hover:border-pink-500 transition-colors payment-method-card">
-                                <i class="fab fa-apple-pay text-2xl text-black mb-2"></i>
-                                <div class="text-sm font-medium">Apple Pay</div>
+                            <div class="border-2 border-gray-200 rounded-md p-1.5 text-center hover:border-pink-500 transition-colors payment-method-card">
+                                <i class="fab fa-apple-pay text-sm text-black mb-1"></i>
+                                <div class="text-xs font-medium">Apple Pay</div>
                             </div>
                         </label>
                     </div>
                 </div>
                 
                 <!-- Complete Sale Button -->
-                <button id="complete-sale" class="w-full bg-pink-600 text-white font-bold py-3 rounded-lg hover:bg-pink-700 transition-colors disabled:bg-gray-400" disabled>Complete Sale</button>
+                <button id="complete-sale" class="w-full bg-pink-600 text-white font-bold py-2 rounded-md hover:bg-pink-700 transition-colors disabled:bg-gray-400 text-sm" disabled>Complete Sale</button>
             </div>
         </aside>
     </div>
@@ -160,92 +166,263 @@
     </div>
 
     <style>
-        .custom-scrollbar::-webkit-scrollbar {
-            width: 6px;
-        }
-        .custom-scrollbar::-webkit-scrollbar-track {
-            background: #f1f1f1;
-            border-radius: 3px;
-        }
-        .custom-scrollbar::-webkit-scrollbar-thumb {
-            background: #c1c1c1;
-            border-radius: 3px;
-        }
-        .custom-scrollbar::-webkit-scrollbar-thumb:hover {
-            background: #a8a8a8;
-        }
-        
-        .payment-method-option input[type="radio"]:checked + .payment-method-card {
-            border-color: #ec4899;
-            background-color: #fdf2f8;
-        }
-        
-        .payment-method-card {
-            transition: all 0.2s ease-in-out;
-        }
-        
-        .payment-method-card:hover {
-            transform: translateY(-2px);
-            box-shadow: 0 4px 12px rgba(0, 0, 0, 0.1);
-        }
-
-        /* Ensure proper layout at all zoom levels */
+        /* Compact layout for 1920x1080 at 125% scale - no scrolling needed */
         .pos-container {
-            min-height: 100vh;
-            height: 100vh;
+            height: calc(100vh - 80px);
+            min-height: 600px;
             overflow: hidden;
         }
 
-        .pos-main {
-            height: 100vh;
-            overflow-y: auto;
-        }
-
         .pos-sidebar {
-            height: 100vh;
-            display: grid;
-            grid-template-rows: auto 1fr auto;
+            display: flex;
+            flex-direction: column;
+            height: 100%;
+            min-width: 350px;
             overflow: hidden;
         }
 
         .cart-section {
-            min-height: 0;
+            flex-grow: 1;
             overflow: hidden;
+            min-height: 120px;
+            padding: 0 0.5rem;
         }
 
         .cart-items-container {
-            height: 100%;
+            max-height: 35vh;
             overflow-y: auto;
             overflow-x: hidden;
-            padding-top: 1rem; /* extra space above first item */
         }
 
         .bottom-section {
             flex-shrink: 0;
             background: white;
             border-top: 1px solid #e5e7eb;
-            padding-top: 1rem;
+            padding: 0.75rem;
         }
 
-        /* Ensure cart items don't overlap */
+        /* Product cards with normal image sizes */
+        .product-card {
+            min-height: 200px;
+            padding: 1rem;
+        }
+
+        .product-card img,
+        .product-card div {
+            width: 90px;
+            height: 90px;
+        }
+
+        /* Ultra-compact cart items */
         .cart-item {
-            margin-bottom: 1rem; /* more space between items */
-            padding: 0.9rem; /* slightly larger internal padding */
+            margin-bottom: 0.5rem;
+            padding: 0.5rem;
             background: white;
-            border-radius: 0.5rem;
-            box-shadow: 0 1px 3px rgba(0, 0, 0, 0.1);
+            border-radius: 0.375rem;
+            box-shadow: 0 1px 2px rgba(0, 0, 0, 0.05);
+            border: 1px solid #f3f4f6;
+            font-size: 0.75rem;
         }
 
         .cart-item:last-child {
             margin-bottom: 0;
         }
 
-        /* Responsive adjustments */
-        @media (max-width: 1024px) {
+        /* Responsive adjustments for 125% scale */
+        @media (min-width: 1920px) {
             .pos-sidebar {
-                height: auto;
-                min-height: 100vh;
+                width: 30%;
+                min-width: 350px;
             }
+            
+            .pos-main {
+                width: 70%;
+            }
+            
+            .product-card {
+                min-height: 180px;
+                padding: 1rem;
+            }
+            
+            .cart-section {
+                padding: 0 0.75rem;
+            }
+            
+            .bottom-section {
+                padding: 0.75rem;
+            }
+        }
+
+        /* Specific optimizations for 1920x1080 at 125% scale */
+        @media (min-width: 1920px) and (max-width: 2000px) {
+            .pos-container {
+                height: 100vh;
+                max-height: 100vh;
+            }
+            
+            .product-card h3 {
+                font-size: 0.875rem;
+                line-height: 1.3;
+                margin-bottom: 0.5rem;
+            }
+            
+            .pos-sidebar h2 {
+                font-size: 1.125rem;
+                margin-bottom: 0.75rem;
+            }
+            
+            .pos-sidebar label {
+                font-size: 0.75rem;
+                margin-bottom: 0.25rem;
+            }
+            
+            .pos-sidebar input,
+            .pos-sidebar select {
+                font-size: 0.875rem;
+                padding: 0.5rem;
+                margin-bottom: 0.5rem;
+            }
+            
+            .cart-item {
+                padding: 0.5rem;
+                margin-bottom: 0.5rem;
+            }
+            
+            .cart-item .font-semibold {
+                font-size: 0.75rem;
+            }
+            
+            .cart-item .text-xs {
+                font-size: 0.625rem;
+            }
+            
+            .cart-item button {
+                min-width: 1.5rem;
+                height: 1.5rem;
+                font-size: 0.625rem;
+            }
+            
+            .cart-item .min-w-\[2rem\] {
+                min-width: 1.5rem;
+            }
+            
+            .cart-item .min-w-\[4rem\] {
+                min-width: 3rem;
+            }
+        }
+
+        /* Compact complete sale button */
+        #complete-sale {
+            margin-top: 0.75rem;
+            padding: 0.75rem;
+            font-size: 0.875rem;
+        }
+
+        /* Custom scrollbar for better visibility */
+        .custom-scrollbar::-webkit-scrollbar {
+            width: 6px;
+        }
+
+        .custom-scrollbar::-webkit-scrollbar-track {
+            background: #f1f5f9;
+            border-radius: 3px;
+        }
+
+        .custom-scrollbar::-webkit-scrollbar-thumb {
+            background: #cbd5e1;
+            border-radius: 3px;
+        }
+
+        .custom-scrollbar::-webkit-scrollbar-thumb:hover {
+            background: #94a3b8;
+        }
+
+        /* Payment method optimization */
+        .payment-method-option {
+            display: block;
+        }
+
+        .payment-method-option input[type="radio"]:checked + .payment-method-card {
+            border-color: #ec4899;
+            background-color: #fdf2f8;
+        }
+
+        .payment-method-card {
+            transition: all 0.2s ease;
+            padding: 0.5rem;
+        }
+
+        .payment-method-card:hover {
+            transform: translateY(-2px);
+            box-shadow: 0 4px 12px rgba(0, 0, 0, 0.1);
+        }
+
+        /* Compact cart section header */
+        .cart-section h3 {
+            margin-bottom: 0.5rem;
+            padding-bottom: 0.25rem;
+            border-bottom: 1px solid #e5e7eb;
+            font-size: 0.875rem;
+        }
+
+        /* Compact empty cart state */
+        .cart-items-container .text-center {
+            padding: 1rem 0;
+        }
+
+        .cart-items-container .fa-shopping-cart {
+            font-size: 1.5rem;
+            margin-bottom: 0.5rem;
+        }
+
+        /* Cart count badge */
+        #cart-count {
+            font-size: 0.625rem;
+            line-height: 1;
+        }
+
+        /* Ensure proper spacing in cart */
+        .cart-item {
+            line-height: 1.1;
+        }
+
+        .cart-item .flex-1 p:first-child {
+            margin-bottom: 0.125rem;
+        }
+
+        .cart-item .flex-1 p:last-child {
+            margin-bottom: 0;
+        }
+
+        /* Ensure buttons don't take too much space */
+        .cart-item button {
+            flex-shrink: 0;
+        }
+
+        /* Optimize spacing for current order box */
+        .pos-sidebar .cart-section {
+            margin-bottom: 0.5rem;
+        }
+
+        .pos-sidebar .bottom-section {
+            margin-top: auto;
+        }
+
+        /* Product grid optimization for larger images */
+        .pos-main .grid {
+            gap: 1rem;
+        }
+
+        /* Ensure product images are properly sized */
+        .product-card img {
+            object-fit: cover;
+            border-radius: 0.375rem;
+        }
+
+        /* Product card hover effects */
+        .product-card:hover img {
+            transform: scale(1.05);
+            transition: transform 0.2s ease;
         }
     </style>
 
@@ -259,28 +436,30 @@
                 cartItemsContainer.empty();
                 let subtotal = 0;
                 if (Object.keys(cart).length === 0) {
-                    cartItemsContainer.html(`<div class="text-center text-gray-500 pt-10"><i class="fas fa-shopping-cart fa-2x mb-2"></i><p>Your cart is empty</p></div>`);
+                    cartItemsContainer.html(`<div class="text-center text-gray-500 pt-4"><i class="fas fa-shopping-cart text-lg mb-1"></i><p class="text-xs">Your cart is empty</p></div>`);
+                    $('#cart-count').text('0');
                 } else {
                     for (const id in cart) {
                         const item = cart[id];
                         const itemTotal = item.price * item.quantity;
                         subtotal += itemTotal;
                         const itemHtml = `
-                            <div class="cart-item flex items-center justify-between py-3 border-b border-gray-200 last:border-b-0" data-id="${id}">
-                                <div class="flex-1 min-w-0 mr-3">
-                                    <p class="font-semibold text-sm text-gray-900 truncate">${item.name}</p>
+                            <div class="cart-item flex items-center justify-between py-2" data-id="${id}">
+                                <div class="flex-1 min-w-0 mr-2">
+                                    <p class="font-semibold text-xs text-gray-900 truncate">${item.name}</p>
                                     <p class="text-xs text-gray-500">SKU: ${item.sku} | Stock: ${item.stock}</p>
                                 </div>
-                                <div class="flex items-center space-x-2 flex-shrink-0">
-                                    <button class="update-quantity-btn text-pink-500 hover:text-pink-700 w-6 h-6 rounded-full border border-pink-300 hover:bg-pink-50 flex items-center justify-center" data-id="${id}" data-action="decrement">-</button>
-                                    <span class="text-sm font-medium min-w-[2rem] text-center">${item.quantity}</span>
-                                    <button class="update-quantity-btn text-pink-500 hover:text-pink-700 w-6 h-6 rounded-full border border-pink-300 hover:bg-pink-50 flex items-center justify-center" data-id="${id}" data-action="increment">+</button>
-                                    <button class="remove-item-btn text-red-500 hover:text-red-700 text-sm ml-2 w-6 h-6 rounded-full border border-red-300 hover:bg-red-50 flex items-center justify-center" data-id="${id}"><i class="fas fa-trash text-xs"></i></button>
+                                <div class="flex items-center space-x-1 flex-shrink-0">
+                                    <button class="update-quantity-btn text-pink-500 hover:text-pink-700 w-5 h-5 rounded-full border border-pink-300 hover:bg-pink-50 flex items-center justify-center text-xs" data-id="${id}" data-action="decrement">-</button>
+                                    <span class="text-xs font-medium min-w-[1.5rem] text-center">${item.quantity}</span>
+                                    <button class="update-quantity-btn text-pink-500 hover:text-pink-700 w-5 h-5 rounded-full border border-pink-300 hover:bg-pink-50 flex items-center justify-center text-xs" data-id="${id}" data-action="increment">+</button>
+                                    <button class="remove-item-btn text-red-500 hover:text-red-700 text-xs ml-1 w-5 h-5 rounded-full border border-red-300 hover:bg-red-50 flex items-center justify-center" data-id="${id}"><i class="fas fa-trash text-xs"></i></button>
                                 </div>
-                                <div class="text-right font-semibold text-sm min-w-[4rem]">$${itemTotal.toFixed(2)}</div>
+                                <div class="text-right font-semibold text-xs min-w-[3rem]">$${itemTotal.toFixed(2)}</div>
                             </div>`;
                         cartItemsContainer.append(itemHtml);
                     }
+                    $('#cart-count').text(Object.keys(cart).length);
                 }
                 const selectedPromo = $('#promotion option:selected');
                 const promoType = selectedPromo.data('type');
@@ -475,10 +654,10 @@
                         if (products.length > 0) {
                             products.forEach(function(product) {
                                 const productHtml = `
-                                    <div class="product-card bg-white rounded-lg shadow-md p-4 flex flex-col items-center text-center cursor-pointer hover:shadow-xl hover:scale-105 transition-transform" data-id="${product.Product_ID}" data-name="${product.Product_Name}" data-price="${product.Price}" data-stock="${product.Quantity_on_Hand}">
-                                        ${product.image ? `<img src="/storage/${product.image}" alt="${product.Product_Name}" class="w-24 h-24 object-cover mb-3 rounded-md">` : '<div class="w-24 h-24 bg-gray-200 rounded-md flex items-center justify-center mb-3"><span class="text-xs text-gray-500">No Image</span></div>'}
-                                        <h3 class="font-semibold text-sm">${product.Product_Name}</h3>
-                                        <p class="text-gray-600 font-bold mt-1">$${parseFloat(product.Price).toFixed(2)}</p>
+                                    <div class="product-card bg-white rounded-lg shadow-md p-4 flex flex-col items-center text-center cursor-pointer hover:shadow-xl hover:scale-105 transition-transform" data-id="${product.Product_ID}" data-name="${product.Product_Name}" data-price="${product.Price}" data-stock="${product.Quantity_on_Hand }">
+                                        ${product.image ? `<img src="/storage/${product.image}" alt="${product.Product_Name}" class="w-32 h-32 object-cover mb-3 rounded-md">` : '<div class="w-32 h-32 bg-gray-200 rounded-md flex items-center justify-center mb-3"><span class="text-sm text-gray-500">No Image</span></div>'}
+                                        <h3 class="font-semibold text-sm leading-tight mb-1">${product.Product_Name}</h3>
+                                        <p class="text-gray-600 font-bold text-base">$${parseFloat(product.Price).toFixed(2)}</p>
                                         <p class="text-sm ${product.Quantity_on_Hand > 0 ? 'text-green-600' : 'text-red-600'}">Stock: ${product.Quantity_on_Hand}</p>
                                     </div>`;
                                 productList.append(productHtml);

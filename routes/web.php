@@ -8,6 +8,8 @@ use App\Http\Controllers\Admin\SupplierController;
 use App\Http\Controllers\Admin\PurchaseOrderController;
 use App\Http\Controllers\Admin\OrderController;
 use App\Http\Controllers\Admin\DashboardController as AdminDashboardController;
+use App\Http\Controllers\Admin\StaffPerformanceController;
+use App\Http\Controllers\Admin\DeliveryController;
 use App\Http\Controllers\PosController;
 use Illuminate\Support\Facades\Route;
 
@@ -44,7 +46,7 @@ Route::middleware(['auth'])->group(function () {
 });
 
 // Admin Routes
-Route::middleware(['auth', 'verified', 'role:admin|mananger'])->prefix('admin')->name('admin.')->group(function () {
+Route::middleware(['auth', 'verified', 'role:admin|store-manager'])->prefix('admin')->name('admin.')->group(function () {
     // Dashboard
     Route::get('/dashboard', [AdminDashboardController::class, 'index'])->name('dashboard');
 
@@ -61,10 +63,21 @@ Route::middleware(['auth', 'verified', 'role:admin|mananger'])->prefix('admin')-
     Route::resource('purchase-orders', PurchaseOrderController::class);
     Route::post('purchase-orders/{id}/receive', [PurchaseOrderController::class, 'receiveStock'])->name('purchase-orders.receive');
 
+    // Delivery Management
+    Route::resource('deliveries', DeliveryController::class);
+    Route::post('deliveries/{delivery}/update-quantities', [DeliveryController::class, 'updateQuantities'])->name('deliveries.update-quantities');
+
     // Order History
     Route::get('orders', [OrderController::class, 'index'])->name('orders.index');
     Route::get('orders/{order}', [OrderController::class, 'show'])->name('orders.show');
     Route::get('orders/{order}/receipt', [OrderController::class, 'receipt'])->name('orders.receipt');
+
+    // Staff Performance Management
+    Route::get('staff-performances/analytics', [StaffPerformanceController::class, 'analytics'])->name('staff-performances.analytics');
+    Route::post('staff-performances/regenerate', [StaffPerformanceController::class, 'regenerateFromOrders'])->name('staff-performances.regenerate');
+    Route::get('staff-performances/real-time', [StaffPerformanceController::class, 'getRealTimePerformance'])->name('staff-performances.real-time');
+    Route::resource('staff-performances', StaffPerformanceController::class);
+    Route::get('staff/{staff}/performance', [StaffPerformanceController::class, 'staffPerformance'])->name('staff.performance');
 
     // Roles & Permissions
     Route::get('roles-permissions', [\App\Http\Controllers\Admin\RolePermissionController::class, 'index'])->name('roles-permissions.index');
@@ -83,8 +96,3 @@ Route::middleware(['auth', 'verified', 'role:admin|mananger'])->prefix('admin')-
 Route::get('/', function () {
     return view('auth.login');
 });
-
-// Dashboard for authenticated users
-Route::get('/dashboard', function () {
-    return view('dashboard');
-})->middleware(['auth', 'verified'])->name('dashboard');

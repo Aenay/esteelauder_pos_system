@@ -15,6 +15,9 @@ class DatabaseSeeder extends Seeder
     public function run(): void
     {
         $this->call(RolePermissionSeeder::class);
+        $this->call(DepartmentSeeder::class);
+        $this->call(StaffSeeder::class);
+        
         Product::factory(100)->create();
 
         $user = User::factory()->create([
@@ -23,5 +26,8 @@ class DatabaseSeeder extends Seeder
             'password' => bcrypt('password'),
         ]);
         $user->assignRole('admin');
+
+        // Generate sample data for all models
+        $this->call(SampleDataSeeder::class);
     }
 }

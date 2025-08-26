@@ -56,18 +56,19 @@
                 </button> -->
             </div>
             <nav class="flex-1 px-4 py-6 space-y-2">
-                <a href="{{ url('/dashboard') }}" class="sidebar-link flex items-center px-4 py-2 rounded-lg {{ request()->is('dashboard') ? 'active' : '' }} dark:hover:bg-pink-600 dark:active:bg-pink-700">
-                    <i class="fas fa-tachometer-alt w-6"></i><span>Dashboard</span>
-                </a>
                 <a href="{{ url('/pos') }}" class="sidebar-link flex items-center px-4 py-2 rounded-lg {{ request()->is('pos') ? 'active' : '' }} dark:hover:bg-pink-600 dark:active:bg-pink-700">
                     <i class="fas fa-cash-register w-6"></i><span>POS</span>
                 </a>
+
                 @role('admin|store-manager')
                 <a href="{{ route('admin.products.index') }}" class="sidebar-link flex items-center px-4 py-2 rounded-lg {{ request()->is('products') ? 'active' : '' }} dark:hover:bg-pink-600 dark:active:bg-pink-700">
                     <i class="fas fa-box-open w-6"></i><span>Products</span>
                 </a>
                 <a href="{{ route('admin.orders.index')  }}" class="sidebar-link flex items-center px-4 py-2 rounded-lg {{ request()->is('orders') ? 'active' : '' }} dark:hover:bg-pink-600 dark:active:bg-pink-700">
                     <i class="fas fa-receipt w-6"></i><span>Orders</span>
+                </a>
+                <a href="{{ route('admin.staff-performances.index') }}" class="sidebar-link flex items-center px-4 py-2 rounded-lg {{ request()->routeIs('admin.staff-performances.*') ? 'active' : '' }} dark:hover:bg-pink-600 dark:active:bg-pink-700">
+                    <i class="fas fa-chart-line w-6"></i><span>Staff Performance</span>
                 </a>
                 @endrole
                 @role('admin')
@@ -82,6 +83,12 @@
                 @role('admin|store-manager')
                 <a href="{{ route('admin.customers.index') }}" class="sidebar-link flex items-center px-4 py-2 rounded-lg {{ request()->is('admin/customers*') ? 'active' : '' }} dark:hover:bg-pink-600 dark:active:bg-pink-700">
                     <i class="fas fa-users w-6"></i><span>Customers</span>
+                </a>
+                <a href="{{ route('admin.suppliers.index') }}" class="sidebar-link flex items-center px-4 py-2 rounded-lg {{ request()->is('admin/suppliers*') ? 'active' : '' }} dark:hover:bg-pink-600 dark:active:bg-pink-700">
+                    <i class="fas fa-truck w-6"></i><span>Suppliers</span>
+                </a>
+                <a href="{{ route('admin.deliveries.index') }}" class="sidebar-link flex items-center px-4 py-2 rounded-lg {{ request()->is('admin/deliveries*') ? 'active' : '' }} dark:hover:bg-pink-600 dark:active:bg-pink-700">
+                    <i class="fas fa-shipping-fast w-6"></i><span>Deliveries</span>
                 </a>
                 @endrole
                 @role('admin')
