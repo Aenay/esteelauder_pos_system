@@ -90,6 +90,9 @@
                 <a href="{{ route('admin.deliveries.index') }}" class="sidebar-link flex items-center px-4 py-2 rounded-lg {{ request()->is('admin/deliveries*') ? 'active' : '' }} dark:hover:bg-pink-600 dark:active:bg-pink-700">
                     <i class="fas fa-shipping-fast w-6"></i><span>Deliveries</span>
                 </a>
+                <a href="{{ route('admin.loyalty.index') }}" class="sidebar-link flex items-center px-4 py-2 rounded-lg {{ request()->is('admin/loyalty*') ? 'active' : '' }} dark:hover:bg-pink-600 dark:active:bg-pink-700">
+                    <i class="fas fa-star w-6"></i><span>Loyalty Points</span>
+                </a>
                 @endrole
                 @role('admin')
                 <a href="{{ route('admin.users.index') }}" class="sidebar-link flex items-center px-4 py-2 rounded-lg {{ request()->is('admin/users') ? 'active' : '' }} dark:hover:bg-pink-600 dark:active:bg-pink-700">

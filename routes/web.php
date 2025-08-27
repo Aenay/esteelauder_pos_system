@@ -72,6 +72,13 @@ Route::middleware(['auth', 'verified', 'role:admin|store-manager'])->prefix('adm
     Route::get('orders/{order}', [OrderController::class, 'show'])->name('orders.show');
     Route::get('orders/{order}/receipt', [OrderController::class, 'receipt'])->name('orders.receipt');
 
+    // Loyalty Management
+    Route::resource('loyalty', \App\Http\Controllers\Admin\LoyaltyController::class);
+    Route::get('loyalty/{loyalty}/analytics', [\App\Http\Controllers\Admin\LoyaltyController::class, 'analytics'])->name('loyalty.analytics');
+    Route::post('loyalty/{loyalty}/add-points', [\App\Http\Controllers\Admin\LoyaltyController::class, 'addPoints'])->name('loyalty.add-points');
+    Route::post('loyalty/{loyalty}/use-points', [\App\Http\Controllers\Admin\LoyaltyController::class, 'usePoints'])->name('loyalty.use-points');
+    Route::post('loyalty/test-calculation', [\App\Http\Controllers\Admin\LoyaltyController::class, 'testCalculation'])->name('loyalty.test-calculation');
+
     // Staff Performance Management
     Route::get('staff-performances/analytics', [StaffPerformanceController::class, 'analytics'])->name('staff-performances.analytics');
     Route::post('staff-performances/regenerate', [StaffPerformanceController::class, 'regenerateFromOrders'])->name('staff-performances.regenerate');

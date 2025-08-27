@@ -7,6 +7,7 @@ use App\Models\Order;
 use App\Models\OrderDetail;
 use App\Models\Customer;
 use App\Models\Promotion;
+use App\Services\LoyaltyService;
 use Illuminate\Http\Request;
 use Illuminate\Support\Facades\Auth;
 use Illuminate\Support\Facades\DB;
@@ -16,6 +17,13 @@ use App\Models\Department;
 
 class PosController extends Controller
 {
+    protected $loyaltyService;
+
+    public function __construct(LoyaltyService $loyaltyService)
+    {
+        $this->loyaltyService = $loyaltyService;
+    }
+
     public function index()
     {
         $products = Product::all();
@@ -224,15 +232,27 @@ class PosController extends Controller
                 $product->save();
             }
 
+            // Award loyalty points if customer is eligible
+            $loyaltyPointsAwarded = 0;
+            $loyaltyMessage = '';
+            
+            if ($this->loyaltyService->isCustomerEligibleForLoyalty($customerId)) {
+                $loyaltyPointsAwarded = $this->loyaltyService->awardPointsForPurchase($order);
+                if ($loyaltyPointsAwarded > 0) {
+                    $loyaltyMessage = " and {$loyaltyPointsAwarded} loyalty points awarded!";
+                }
+            }
+
             DB::commit();
             Session::forget('cart');
 
             return response()->json([
-                'message' => 'Sale completed successfully!',
+                'message' => 'Sale completed successfully!' . $loyaltyMessage,
                 'order_id' => $order->Order_ID,
                 'customer_name' => $customer->Customer_Name,
                 'payment_method' => $request->input('payment_method', 'card'),
-                'transaction_id' => $order->transaction_id
+                'transaction_id' => $order->transaction_id,
+                'loyalty_points_awarded' => $loyaltyPointsAwarded
             ]);
 
         } catch (\Exception $e) {
@@ -257,12 +277,24 @@ class PosController extends Controller
             'status' => 'completed'
         ]);
 
+        // Award loyalty points if customer is eligible
+        $loyaltyPointsAwarded = 0;
+        $loyaltyMessage = '';
+        
+        if ($this->loyaltyService->isCustomerEligibleForLoyalty($request->customer_id)) {
+            $loyaltyPointsAwarded = $this->loyaltyService->awardPointsForPurchase($order);
+            if ($loyaltyPointsAwarded > 0) {
+                $loyaltyMessage = " and {$loyaltyPointsAwarded} loyalty points awarded!";
+            }
+        }
+
         // Clear the cart after successful checkout
         Session::forget('cart');
 
         return response()->json([
-            'message' => 'Order completed successfully',
-            'order_id' => $order->Order_ID
+            'message' => 'Order completed successfully' . $loyaltyMessage,
+            'order_id' => $order->Order_ID,
+            'loyalty_points_awarded' => $loyaltyPointsAwarded
         ]);
     }
 }

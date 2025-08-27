@@ -15,7 +15,7 @@ class StaffSeeder extends Seeder
     public function run(): void
     {
         // Create a sample staff member
-        Staff::create([n            'Staff_Name' => 'Test Staff',
+        Staff::create(['Staff_Name' => 'Test Staff',
             'Staff_Phone' => '123-456-7890',
             'Staff_Address' => '123 Test St',
             'email' => 'test@example.com', // IMPORTANT: Change this to the email of your authenticated user

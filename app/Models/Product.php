@@ -19,7 +19,7 @@ class Product extends Model
         'Price',
         'Quantity_on_Hand',
         'description',
-        'image'
+        'image',
     ];
 
     protected $casts = [

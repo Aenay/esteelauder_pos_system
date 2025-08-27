@@ -39,6 +39,24 @@ class Order extends Model
         return $this->belongsTo(Customer::class, 'Customer_ID', 'Customer_ID');
     }
 
+    /**
+     * Check if this order is eligible for loyalty points
+     */
+    public function isEligibleForLoyalty(): bool
+    {
+        return $this->customer_type !== 'walk_in' && 
+               $this->customer && 
+               $this->customer->Customer_Type !== 'walk_in';
+    }
+
+    /**
+     * Get the amount eligible for loyalty points calculation
+     */
+    public function getLoyaltyEligibleAmount(): float
+    {
+        return $this->Final_Amount;
+    }
+
     public function staff()
     {
         return $this->belongsTo(Staff::class, 'Staff_ID', 'Staff_ID');

@@ -1,28 +1,34 @@
 @extends('layouts.app')
 
 @section('content')
-<div class="py-12">
-    <div class="max-w-7xl mx-auto sm:px-6 lg:px-8">
-        <!-- Header -->
-        <div class="mb-6 flex justify-between items-center">
+<div class="container mx-auto px-4 py-8">
+    <!-- Header -->
+    <div class="flex justify-between items-center mb-6">
+        <div class="flex items-center">
+            <a href="{{ route('admin.suppliers.index') }}" class="text-purple-600 hover:text-purple-900 mr-4">
+                <svg class="w-6 h-6" fill="none" stroke="currentColor" viewBox="0 0 24 24">
+                    <path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M15 19l-7-7 7-7"></path>
+                </svg>
+            </a>
             <div>
-                <h2 class="text-3xl font-bold text-gray-900">{{ $supplier->Supplier_Name }}</h2>
+                <h1 class="text-3xl font-bold text-gray-900">{{ $supplier->Supplier_Name }}</h1>
                 <p class="mt-2 text-gray-600">Supplier ID: {{ $supplier->Supplier_ID }}</p>
             </div>
-            <div class="flex space-x-3">
-                <a href="{{ route('admin.suppliers.edit', $supplier) }}" 
-                   class="bg-green-600 hover:bg-green-700 text-white font-bold py-2 px-4 rounded-lg flex items-center">
-                    <svg class="w-5 h-5 mr-2" fill="none" stroke="currentColor" viewBox="0 0 24 24">
-                        <path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M11 5H6a2 2 0 00-2 2v11a2 2 0 002 2h11a2 2 0 002-2v-5m-1.414-9.414a2 2 0 112.828 2.828L11.828 15H9v-2.828l8.586-8.586z"/>
-                    </svg>
-                    Edit Supplier
-                </a>
-                <a href="{{ route('admin.suppliers.index') }}" 
-                   class="bg-gray-600 hover:bg-gray-700 text-white font-bold py-2 px-4 rounded-lg">
-                    Back to Suppliers
-                </a>
-            </div>
         </div>
+        <div class="flex space-x-3">
+            <a href="{{ route('admin.suppliers.edit', $supplier) }}" 
+               class="bg-green-600 hover:bg-green-700 text-white font-bold py-2 px-4 rounded-lg flex items-center transition-colors">
+                <svg class="w-5 h-5 mr-2" fill="none" stroke="currentColor" viewBox="0 0 24 24">
+                    <path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M11 5H6a2 2 0 00-2 2v11a2 2 0 002 2h11a2 2 0 002-2v-5m-1.414-9.414a2 2 0 112.828 2.828L11.828 15H9v-2.828l8.586-8.586z"/>
+                </svg>
+                Edit Supplier
+            </a>
+            <a href="{{ route('admin.suppliers.index') }}" 
+               class="bg-purple-600 hover:bg-purple-700 text-white font-bold py-2 px-4 rounded-lg transition-colors">
+                Back to Suppliers
+            </a>
+        </div>
+    </div>
 
         @if(session('success'))
             <div class="mb-6 bg-green-100 border border-green-400 text-green-700 px-4 py-3 rounded">
@@ -33,7 +39,7 @@
         <!-- Supplier Information -->
         <div class="grid grid-cols-1 lg:grid-cols-3 gap-6 mb-8">
             <!-- Basic Info -->
-            <div class="bg-white overflow-hidden shadow-sm rounded-lg">
+            <div class="bg-white shadow-md rounded-lg">
                 <div class="px-6 py-4 border-b border-gray-200">
                     <h3 class="text-lg font-medium text-gray-900">Basic Information</h3>
                 </div>
@@ -72,7 +78,7 @@
             </div>
 
             <!-- Statistics -->
-            <div class="bg-white overflow-hidden shadow-sm rounded-lg">
+            <div class="bg-white shadow-md rounded-lg">
                 <div class="px-6 py-4 border-b border-gray-200">
                     <h3 class="text-lg font-medium text-gray-900">Statistics</h3>
                 </div>
@@ -95,18 +101,18 @@
             </div>
 
             <!-- Quick Actions -->
-            <div class="bg-white overflow-hidden shadow-sm rounded-lg">
+            <div class="bg-white shadow-md rounded-lg">
                 <div class="px-6 py-4 border-b border-gray-200">
                     <h3 class="text-lg font-medium text-gray-900">Quick Actions</h3>
                 </div>
                 <div class="p-6">
                     <div class="space-y-3">
                         <a href="{{ route('admin.deliveries.create') }}?supplier={{ $supplier->Supplier_ID }}" 
-                           class="w-full bg-indigo-600 hover:bg-indigo-700 text-white text-center py-2 px-4 rounded-md text-sm font-medium">
+                           class="w-full bg-purple-600 hover:bg-purple-700 text-white text-center py-2 px-4 rounded-md text-sm font-medium transition-colors">
                             Create New Delivery
                         </a>
                         <a href="{{ route('admin.suppliers.edit', $supplier) }}" 
-                           class="w-full bg-green-600 hover:bg-green-700 text-white text-center py-2 px-4 rounded-md text-sm font-medium">
+                           class="w-full bg-green-600 hover:bg-green-700 text-white text-center py-2 px-4 rounded-md text-sm font-medium transition-colors">
                             Edit Supplier
                         </a>
                         @if($supplier->total_deliveries == 0)
@@ -130,7 +136,7 @@
         </div>
 
         <!-- Delivery History -->
-        <div class="bg-white overflow-hidden shadow-sm rounded-lg">
+        <div class="bg-white shadow-md rounded-lg">
             <div class="px-6 py-4 border-b border-gray-200">
                 <h3 class="text-lg font-medium text-gray-900">Delivery History</h3>
             </div>
@@ -170,7 +176,7 @@
                             </td>
                             <td class="px-6 py-4 whitespace-nowrap text-sm font-medium">
                                 <a href="{{ route('admin.deliveries.show', $delivery) }}" 
-                                   class="text-indigo-600 hover:text-indigo-900 bg-indigo-50 hover:bg-indigo-100 px-3 py-1 rounded-md text-sm">
+                                   class="text-purple-600 hover:text-purple-900 bg-purple-50 hover:bg-purple-100 px-3 py-1 rounded-md text-sm transition-colors">
                                     View
                                 </a>
                             </td>
@@ -187,7 +193,7 @@
                 <p class="text-lg font-medium text-gray-900 mb-2">No deliveries yet</p>
                 <p class="text-gray-500">This supplier hasn't had any deliveries yet</p>
                 <a href="{{ route('admin.deliveries.create') }}?supplier={{ $supplier->Supplier_ID }}" 
-                   class="mt-4 inline-block bg-indigo-600 hover:bg-indigo-700 text-white font-medium py-2 px-4 rounded-md">
+                   class="mt-4 inline-block bg-purple-600 hover:bg-purple-700 text-white font-medium py-2 px-4 rounded-md transition-colors">
                     Create First Delivery
                 </a>
             </div>

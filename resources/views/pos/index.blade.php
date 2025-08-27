@@ -121,10 +121,10 @@
                             </div>
                         </label>
                         <label class="payment-method-option cursor-pointer">
-                            <input type="radio" name="payment_method" value="paypal" class="sr-only">
+                            <input type="radio" name="payment_method" value="cash" class="sr-only">
                             <div class="border-2 border-gray-200 rounded-md p-1.5 text-center hover:border-pink-500 transition-colors payment-method-card">
-                                <i class="fab fa-paypal text-sm text-blue-600 mb-1"></i>
-                                <div class="text-xs font-medium">PayPal</div>
+                                <i class="fas fa-money-bill-wave text-sm text-green-600 mb-1"></i>
+                                <div class="text-xs font-medium">Cash</div>
                             </div>
                         </label>
                         <label class="payment-method-option cursor-pointer">

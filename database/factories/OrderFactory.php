@@ -19,7 +19,7 @@ class OrderFactory extends Factory
      */
     public function definition(): array
     {
-        $paymentMethods = ['card', 'cash', 'bank_transfer'];
+        $paymentMethods = ['card', 'cash'];
         $paymentStatuses = ['pending', 'completed', 'failed'];
         
         $orderDate = $this->faker->dateTimeBetween('-6 months', 'now');
