@@ -144,11 +144,11 @@
                     <div class="space-y-4">
                         <div class="flex justify-between items-center">
                             <span class="text-gray-600 dark:text-gray-400">Staff Members</span>
-                            <span class="text-2xl font-bold text-blue-600 dark:text-blue-400">{{ $branch->staff_count }}</span>
+                            <span class="text-2xl font-bold text-blue-600 dark:text-blue-400">N/A</span>
                         </div>
                         <div class="flex justify-between items-center">
                             <span class="text-gray-600 dark:text-gray-400">Total Orders</span>
-                            <span class="text-2xl font-bold text-green-600 dark:text-green-400">{{ $branch->orders_count }}</span>
+                            <span class="text-2xl font-bold text-green-600 dark:text-green-400">N/A</span>
                         </div>
                         <div class="flex justify-between items-center">
                             <span class="text-gray-600 dark:text-gray-400">Branch Age</span>
@@ -158,6 +158,15 @@
                 </div>
 
                 <!-- Recent Orders -->
+                <div class="bg-white dark:bg-gray-800 rounded-lg shadow-lg p-6">
+                    <h3 class="text-lg font-semibold text-gray-900 dark:text-white mb-4 border-b border-gray-200 dark:border-gray-700 pb-2">
+                        <i class="fas fa-info-circle mr-2 text-blue-500"></i>Note
+                    </h3>
+                    <p class="text-sm text-gray-600 dark:text-gray-400">
+                        Staff and orders data is not available since branch relationships are not configured.
+                    </p>
+                </div>
+
                 @if($recentOrders->count() > 0)
                 <div class="bg-white dark:bg-gray-800 rounded-lg shadow-lg p-6">
                     <h3 class="text-lg font-semibold text-gray-900 dark:text-white mb-4 border-b border-gray-200 dark:border-gray-700 pb-2">
@@ -199,6 +208,15 @@
                 @endif
 
                 <!-- Staff Members -->
+                <div class="bg-white dark:bg-gray-800 rounded-lg shadow-lg p-6">
+                    <h3 class="text-lg font-semibold text-gray-900 dark:text-white mb-4 border-b border-gray-200 dark:border-gray-700 pb-2">
+                        <i class="fas fa-info-circle mr-2 text-blue-500"></i>Note
+                    </h3>
+                    <p class="text-sm text-gray-600 dark:text-gray-400">
+                        Staff data is not available since branch relationships are not configured.
+                    </p>
+                </div>
+
                 @if($staffMembers->count() > 0)
                 <div class="bg-white dark:bg-gray-800 rounded-lg shadow-lg p-6">
                     <h3 class="text-lg font-semibold text-gray-900 dark:text-white mb-4 border-b border-gray-200 dark:border-gray-700 pb-2">
