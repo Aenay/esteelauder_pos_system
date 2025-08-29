@@ -24,14 +24,15 @@
                         <span class="font-medium">🎯 Rate:</span> 1 point for every $10 spent
                     </div>
                     <div>
-                        <span class="font-medium">👥 Eligibility:</span> Registered members only
+                        <span class="font-medium">👥 Eligibility:</span> Internal members only
                     </div>
                     <div>
-                        <span class="font-medium">❌ Excluded:</span> Walk-in customers
+                        <span class="font-medium">❌ Excluded:</span> External customers
                     </div>
                 </div>
                 <p class="text-sm text-purple-600 mt-2">
-                    Points are automatically awarded when members make purchases through the POS system.
+                    <strong>IMPORTANT:</strong> Only internal members (Customer_Type = 'internal') are eligible for loyalty points. 
+                    External customers (Customer_Type = 'external') are automatically excluded from the loyalty system.
                 </p>
                 
                 <!-- Test Calculator -->

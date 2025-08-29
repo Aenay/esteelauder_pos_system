@@ -7,7 +7,7 @@
         <div class="mb-6 flex justify-between items-center">
             <h2 class="text-3xl font-bold text-gray-900">Inventory & Delivery Management</h2>
             <a href="{{ route('admin.deliveries.create') }}" 
-               class="bg-indigo-600 hover:bg-indigo-700 text-white font-bold py-2 px-4 rounded-lg flex items-center">
+               class="bg-pink-600 hover:bg-pink-700 text-white font-bold py-2 px-4 rounded-lg flex items-center">
                 <svg class="w-5 h-5 mr-2" fill="none" stroke="currentColor" viewBox="0 0 24 24">
                     <path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M12 6v6m0 0v6m0-6h6m-6 0H6"/>
                 </svg>

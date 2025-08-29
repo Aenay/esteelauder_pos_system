@@ -15,19 +15,44 @@ class LoyaltyController extends Controller
      */
     public function index()
     {
+        // Only show loyalty records for internal customers (members)
         $loyaltyRecords = LoyaltyPoint::with('customer')
+            ->whereHas('customer', function($query) {
+                $query->where('Customer_Type', 'internal');
+            })
             ->orderBy('last_activity_date', 'desc')
             ->paginate(15);
 
         $stats = [
-            'total_customers' => LoyaltyPoint::count(),
-            'bronze_members' => LoyaltyPoint::where('tier_level', 'bronze')->count(),
-            'silver_members' => LoyaltyPoint::where('tier_level', 'silver')->count(),
-            'gold_members' => LoyaltyPoint::where('tier_level', 'gold')->count(),
-            'platinum_members' => LoyaltyPoint::where('tier_level', 'platinum')->count(),
-            'total_points_issued' => LoyaltyPoint::sum('points_earned'),
-            'total_points_redeemed' => LoyaltyPoint::sum('points_used'),
-            'automatic_points_awarded' => LoyaltyPoint::where('notes', 'like', 'Purchase reward for Order%')->sum('points_earned'),
+            'total_customers' => LoyaltyPoint::whereHas('customer', function($query) {
+                $query->where('Customer_Type', 'internal');
+            })->count(),
+            'bronze_members' => LoyaltyPoint::where('tier_level', 'bronze')
+                ->whereHas('customer', function($query) {
+                    $query->where('Customer_Type', 'internal');
+                })->count(),
+            'silver_members' => LoyaltyPoint::where('tier_level', 'silver')
+                ->whereHas('customer', function($query) {
+                    $query->where('Customer_Type', 'internal');
+                })->count(),
+            'gold_members' => LoyaltyPoint::where('tier_level', 'gold')
+                ->whereHas('customer', function($query) {
+                    $query->where('Customer_Type', 'internal');
+                })->count(),
+            'platinum_members' => LoyaltyPoint::where('tier_level', 'platinum')
+                ->whereHas('customer', function($query) {
+                    $query->where('Customer_Type', 'internal');
+                })->count(),
+            'total_points_issued' => LoyaltyPoint::whereHas('customer', function($query) {
+                $query->where('Customer_Type', 'internal');
+            })->sum('points_earned'),
+            'total_points_redeemed' => LoyaltyPoint::whereHas('customer', function($query) {
+                $query->where('Customer_Type', 'internal');
+            })->sum('points_used'),
+            'automatic_points_awarded' => LoyaltyPoint::where('notes', 'like', 'Purchase reward for Order%')
+                ->whereHas('customer', function($query) {
+                    $query->where('Customer_Type', 'internal');
+                })->sum('points_earned'),
         ];
 
         return view('admin.loyalty.index', compact('loyaltyRecords', 'stats'));
@@ -38,7 +63,10 @@ class LoyaltyController extends Controller
      */
     public function create()
     {
-        $customers = Customer::whereDoesntHave('loyaltyPoints')->get();
+        // Only show internal customers (members) who don't have loyalty records
+        $customers = Customer::where('Customer_Type', 'internal')
+            ->whereDoesntHave('loyaltyPoints')
+            ->get();
         return view('admin.loyalty.create', compact('customers'));
     }
 
@@ -53,6 +81,12 @@ class LoyaltyController extends Controller
             'tier_level' => 'required|in:bronze,silver,gold,platinum',
             'notes' => 'nullable|string|max:500',
         ]);
+
+        // Additional validation: Ensure customer is internal (member)
+        $customer = Customer::find($request->Customer_ID);
+        if (!$customer || $customer->Customer_Type !== 'internal') {
+            return back()->withErrors(['Customer_ID' => 'Loyalty records can only be created for internal members, not external customers.']);
+        }
 
         DB::beginTransaction();
         try {
@@ -90,7 +124,8 @@ class LoyaltyController extends Controller
      */
     public function edit(LoyaltyPoint $loyalty)
     {
-        $customers = Customer::all();
+        // Only show internal customers (members)
+        $customers = Customer::where('Customer_Type', 'internal')->get();
         return view('admin.loyalty.edit', compact('loyalty', 'customers'));
     }
 
@@ -106,6 +141,12 @@ class LoyaltyController extends Controller
             'tier_level' => 'required|in:bronze,silver,gold,platinum',
             'notes' => 'nullable|string|max:500',
         ]);
+
+        // Additional validation: Ensure customer is internal (member)
+        $customer = Customer::find($request->Customer_ID);
+        if (!$customer || $customer->Customer_Type !== 'internal') {
+            return back()->withErrors(['Customer_ID' => 'Loyalty records can only be updated for internal members, not external customers.']);
+        }
 
         // Validate that points_used doesn't exceed points_earned
         if ($request->points_used > $request->points_earned) {

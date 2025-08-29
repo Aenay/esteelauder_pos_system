@@ -10,6 +10,7 @@ use App\Http\Controllers\Admin\OrderController;
 use App\Http\Controllers\Admin\DashboardController as AdminDashboardController;
 use App\Http\Controllers\Admin\StaffPerformanceController;
 use App\Http\Controllers\Admin\DeliveryController;
+use App\Http\Controllers\Admin\BranchController;
 use App\Http\Controllers\PosController;
 use Illuminate\Support\Facades\Route;
 
@@ -66,6 +67,10 @@ Route::middleware(['auth', 'verified', 'role:admin|store-manager'])->prefix('adm
     // Delivery Management
     Route::resource('deliveries', DeliveryController::class);
     Route::post('deliveries/{delivery}/update-quantities', [DeliveryController::class, 'updateQuantities'])->name('deliveries.update-quantities');
+
+    // Branch Management
+    Route::resource('branches', BranchController::class);
+    Route::get('branches/analytics', [BranchController::class, 'analytics'])->name('branches.analytics');
 
     // Order History
     Route::get('orders', [OrderController::class, 'index'])->name('orders.index');

@@ -168,22 +168,23 @@
     <style>
         /* Compact layout for 1920x1080 at 125% scale - no scrolling needed */
         .pos-container {
-            height: calc(100vh - 80px);
+            height: calc(100vh - 10px);
             min-height: 600px;
-            overflow: hidden;
+            /* overflow: hidden; */
         }
+        
 
         .pos-sidebar {
             display: flex;
             flex-direction: column;
             height: 100%;
             min-width: 350px;
-            overflow: hidden;
+            /* overflow: hidden; */
         }
 
         .cart-section {
             flex-grow: 1;
-            overflow: hidden;
+            /* overflow: hidden; */
             min-height: 120px;
             padding: 0 0.5rem;
         }

@@ -20,17 +20,17 @@ class LoyaltyService
 
     /**
      * Award loyalty points to a customer for a purchase
-     * Only awards points to registered members (not walk-in customers)
+     * Only awards points to registered members (not external/walk-in customers)
      */
     public function awardPointsForPurchase(Order $order): ?int
     {
         // Only award points to registered members
-        if ($order->customer_type === 'walk_in') {
+        if ($order->customer_type === 'walk_in' || $order->customer_type === 'external') {
             return null;
         }
 
         // Check if customer exists and is a member
-        if (!$order->customer || $order->customer->Customer_Type === 'walk_in') {
+        if (!$order->customer || $order->customer->Customer_Type === 'walk_in' || $order->customer->Customer_Type === 'external') {
             return null;
         }
 
@@ -116,8 +116,8 @@ class LoyaltyService
             return false;
         }
 
-        // Only registered members are eligible (not walk-in customers)
-        return $customer->Customer_Type !== 'walk_in';
+        // Only internal members are eligible (not external/walk-in customers)
+        return $customer->Customer_Type === 'internal';
     }
 
     /**

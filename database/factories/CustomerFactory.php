@@ -16,7 +16,7 @@ class CustomerFactory extends Factory
      */
     public function definition(): array
     {
-        $customerTypes = ['internal', 'external'];
+        $customerTypes = ['internal'];
         
         return [
             'Customer_Name' => $this->faker->name(),

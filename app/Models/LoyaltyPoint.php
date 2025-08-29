@@ -21,6 +21,31 @@ class LoyaltyPoint extends Model
         'notes',
     ];
 
+    /**
+     * Boot method to add global scopes and event listeners
+     */
+    protected static function boot()
+    {
+        parent::boot();
+
+        // Ensure only internal customers (members) can have loyalty records
+        static::creating(function ($loyaltyPoint) {
+            $customer = Customer::find($loyaltyPoint->Customer_ID);
+            if ($customer && $customer->Customer_Type !== 'internal') {
+                throw new \Exception('Loyalty records cannot be created for external customers. Only internal members are eligible.');
+            }
+        });
+
+        static::updating(function ($loyaltyPoint) {
+            if ($loyaltyPoint->isDirty('Customer_ID')) {
+                $customer = Customer::find($loyaltyPoint->Customer_ID);
+                if ($customer && $customer->Customer_Type !== 'internal') {
+                    throw new \Exception('Loyalty records cannot be updated for external customers. Only internal members are eligible.');
+                }
+            }
+        });
+    }
+
     protected $casts = [
         'last_activity_date' => 'date',
         'points_earned' => 'integer',
