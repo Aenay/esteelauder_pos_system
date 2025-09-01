@@ -268,7 +268,7 @@
                         Cancel
                     </a>
                     <button type="submit" 
-                        class="bg-gradient-to-r from-purple-600 to-pink-600 hover:from-purple-700 hover:to-pink-700 text-white font-bold py-3 px-8 rounded-lg shadow-lg transform transition-all duration-200 hover:scale-105">
+                        class="bg-pink-600  hover:bg-pink-700  text-white font-bold py-3 px-8 rounded-lg shadow-lg transform transition-all duration-200 hover:scale-105">
                         <i class="fas fa-save mr-2"></i>Create Branch
                     </button>
                 </div>
