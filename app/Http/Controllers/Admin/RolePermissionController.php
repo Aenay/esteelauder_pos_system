@@ -10,8 +10,14 @@ use Spatie\Permission\Models\Permission;
 
 class RolePermissionController extends Controller
 {
+
     public function index()
     {
+        // Check if user has admin role
+        if (!auth()->user()->hasRole('admin')) {
+            abort(403, 'Unauthorized access. Admin role required.');
+        }
+        
         $users = User::orderBy('name')->get();
         $roles = Role::orderBy('name')->get();
         $permissions = Permission::orderBy('name')->get();
@@ -20,6 +26,11 @@ class RolePermissionController extends Controller
 
     public function update(Request $request, User $user)
     {
+        // Check if user has admin role
+        if (!auth()->user()->hasRole('admin')) {
+            abort(403, 'Unauthorized access. Admin role required.');
+        }
+        
         $validated = $request->validate([
             'roles' => ['array'],
             'permissions' => ['array'],
@@ -27,6 +38,15 @@ class RolePermissionController extends Controller
 
         $roles = $validated['roles'] ?? [];
         $permissions = $validated['permissions'] ?? [];
+
+        // Debug logging
+        \Log::info('Role Permission Update', [
+            'user_id' => $user->id,
+            'user_name' => $user->name,
+            'roles' => $roles,
+            'permissions' => $permissions,
+            'request_data' => $request->all()
+        ]);
 
         // Admins manage others but cannot remove their own admin role via this page
         if ($user->id === auth()->id()) {

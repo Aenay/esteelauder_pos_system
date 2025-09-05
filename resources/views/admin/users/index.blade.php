@@ -22,7 +22,6 @@
                         <tr>
                             <th class="py-3 px-6 text-left">Name</th>
                             <th class="py-3 px-6 text-left">Email</th>
-                            <th class="py-3 px-6 text-left">Role</th>
                             <th class="py-3 px-6 text-center">Actions</th>
                         </tr>
                     </thead>
@@ -31,7 +30,6 @@
                         <tr class="border-b">
                             <td class="py-3 px-6 font-medium">{{ $user->name }}</td>
                             <td class="py-3 px-6">{{ $user->email }}</td>
-                            <td class="py-3 px-6">{{ $user->getRoleNames()->first() }}</td>
                             <td class="py-3 px-6 text-center">
                                 <a href="{{ route('admin.users.edit', $user->id) }}" class="text-blue-500 hover:text-blue-700 mr-4" title="Edit User"><i class="fas fa-edit"></i></a>
                                 <form action="{{ route('admin.users.destroy', $user->id) }}" method="POST" class="inline-block" onsubmit="return confirm('Are you sure you want to delete this user?');">

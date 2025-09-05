@@ -91,9 +91,11 @@ Route::middleware(['auth', 'verified', 'role:admin|store-manager'])->prefix('adm
     Route::resource('staff-performances', StaffPerformanceController::class);
     Route::get('staff/{staff}/performance', [StaffPerformanceController::class, 'staffPerformance'])->name('staff.performance');
 
-    // Roles & Permissions
-    Route::get('roles-permissions', [\App\Http\Controllers\Admin\RolePermissionController::class, 'index'])->name('roles-permissions.index');
-    Route::patch('roles-permissions/{user}', [\App\Http\Controllers\Admin\RolePermissionController::class, 'update'])->name('roles-permissions.update');
+    // Roles & Permissions (Admin only)
+    Route::middleware(['role:admin'])->group(function () {
+        Route::get('roles-permissions', [\App\Http\Controllers\Admin\RolePermissionController::class, 'index'])->name('roles-permissions.index');
+        Route::patch('roles-permissions/{user}', [\App\Http\Controllers\Admin\RolePermissionController::class, 'update'])->name('roles-permissions.update');
+    });
 
     // User Management
     Route::resource('users', UserController::class);

@@ -36,15 +36,6 @@
                             <x-text-input id="password_confirmation" class="block mt-1 w-full" type="password" name="password_confirmation" required />
                         </div>
 
-                        <!-- Role -->
-                        <div class="mt-4">
-                            <x-input-label for="role" :value="__('Role')" />
-                            <select name="role" id="role" class="block mt-1 w-full rounded-md shadow-sm border-gray-300 focus:border-indigo-300 focus:ring focus:ring-indigo-200 focus:ring-opacity-50">
-                                @foreach($roles as $role)
-                                    <option value="{{ $role->name }}">{{ $role->name }}</option>
-                                @endforeach
-                            </select>
-                        </div>
 
                         <div class="flex items-center justify-end mt-4">
                             <x-primary-button class="ml-4">

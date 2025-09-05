@@ -27,15 +27,6 @@
                             <x-input-error class="mt-2" :messages="$errors->get('email')" />
                         </div>
 
-                        <div>
-                            <x-input-label for="role" :value="__('Role')" />
-                            <select id="role" name="role" class="mt-1 block w-full border-gray-300 focus:border-indigo-500 focus:ring-indigo-500 rounded-md shadow-sm">
-                                <option value="admin" {{ old('role', $user->getRoleNames()->first()) == 'admin' ? 'selected' : '' }}>Admin</option>
-                                <option value="manager" {{ old('role', $user->getRoleNames()->first()) == 'manager' ? 'selected' : '' }}>Store Manager</option>
-                                <option value="staff" {{ old('role', $user->getRoleNames()->first()) == 'staff' ? 'selected' : '' }}>Staff</option>
-                            </select>
-                            <x-input-error class="mt-2" :messages="$errors->get('role')" />
-                        </div>
 
                         <div class="flex items-center gap-4">
                             <x-primary-button>{{ __('Save') }}</x-primary-button>

@@ -6,7 +6,6 @@ use App\Http\Controllers\Controller;
 use App\Models\User;
 use Illuminate\Http\Request;
 use Illuminate\Support\Facades\Hash;
-use Spatie\Permission\Models\Role;
 
 class UserController extends Controller
 {
@@ -16,8 +15,7 @@ class UserController extends Controller
     public function index()
     {
         $users = User::all();
-        $roles = Role::all();
-        return view('admin.users.index', compact('users', 'roles'));
+        return view('admin.users.index', compact('users'));
     }
 
     /**
@@ -25,8 +23,7 @@ class UserController extends Controller
      */
     public function create()
     {
-        $roles = Role::all();
-        return view('admin.users.create', compact('roles'));
+        return view('admin.users.create');
     }
 
     /**
@@ -38,7 +35,6 @@ class UserController extends Controller
             'name' => 'required|string|max:255',
             'email' => 'required|string|email|max:255|unique:users',
             'password' => 'required|string|min:8|confirmed',
-            // 'role' is handled by Spatie, no direct validation here
         ]);
 
         $user = User::create([
@@ -47,7 +43,8 @@ class UserController extends Controller
             'password' => Hash::make($request->password),
         ]);
 
-        $user->assignRole($request->role ?? 'staff'); // Assign role using Spatie
+        // Assign default role (sales-assistant)
+        $user->assignRole('sales-assistant');
 
         return redirect()->route('admin.users.index')->with('success', 'User created successfully.');
     }
@@ -80,15 +77,12 @@ class UserController extends Controller
         $request->validate([
             'name' => 'required|string|max:255',
             'email' => 'required|string|email|max:255|unique:users,email,' . $user->id,
-            // 'role' is handled by Spatie, no direct validation here
         ]);
 
         $user->update([
             'name' => $request->name,
             'email' => $request->email,
         ]);
-
-        $user->syncRoles([$request->role ?? 'staff']); // Sync roles using Spatie
 
         if ($request->filled('password')) {
             $request->validate([
