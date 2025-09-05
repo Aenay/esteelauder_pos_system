@@ -15,7 +15,14 @@
     <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/6.4.2/css/all.min.css">
 
     <!-- Scripts -->
-    <script src="https://code.jquery.com/jquery-3.6.0.min.js"></script>
+    <!-- jQuery CDN (Primary) -->
+    <script src="https://code.jquery.com/jquery-3.7.1.min.js" integrity="sha256-/JqT3SQfawRcv/BIHPThkBvs0OEvtFFmqPF/lYI/Cxo=" crossorigin="anonymous"></script>
+    
+    <!-- jQuery Local Fallback (if CDN fails) -->
+    <script>
+        window.jQuery || document.write('<script src="{{ asset('js/jquery-3.7.1.min.js') }}"><\/script>');
+    </script>
+    
     @vite(['resources/css/app.css', 'resources/js/app.js'])
     <style>
         body {
