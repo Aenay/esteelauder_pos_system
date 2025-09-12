@@ -12,6 +12,11 @@
                         <i class="fas fa-check-circle mr-2"></i>{{ session('success') }}
                     </div>
                 @endif
+                @if($errors->any())
+                    <div class="mt-3 text-red-700 bg-red-100 border border-red-200 px-3 py-1.5 rounded">
+                        {{ $errors->first() }}
+                    </div>
+                @endif
             </div>
         </div>
     </header>
@@ -39,7 +44,7 @@
             </div>
 
             <!-- Roles & Permissions -->
-            <form id="rp-form" method="POST" class="relative">
+            <form id="rp-form" method="POST" class="relative" action="{{ route('admin.roles-permissions.update', ['user' => 0]) }}">
                 @csrf
                 @method('PATCH')
                 <div class="grid grid-cols-1 md:grid-cols-2 gap-6">
@@ -139,7 +144,7 @@
         document.querySelectorAll('.role-checkbox').forEach(cb => cb.checked = !!user && user.roles.includes(cb.value));
         document.querySelectorAll('.perm-checkbox').forEach(cb => cb.checked = !!user && user.perms.includes(cb.value));
         const form = document.getElementById('rp-form');
-        form.action = `{{ url('admin/roles-permissions') }}/${userId}`;
+        form.action = `{{ route('admin.roles-permissions.update', ['user' => 'REPLACE_ID']) }}`.replace('REPLACE_ID', userId || 0);
         document.getElementById('save-btn').disabled = !userId;
         renderBadges(user);
     }

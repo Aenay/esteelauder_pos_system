@@ -54,85 +54,9 @@
             </div>
         </div>
 
-        <!-- Department Performance Comparison -->
-        <div class="grid grid-cols-1 lg:grid-cols-2 gap-6 mb-6">
-            <div class="bg-white rounded-lg shadow-md">
-                <div class="p-6 border-b border-gray-200">
-                    <h3 class="text-lg font-medium text-gray-900">Department Performance</h3>
-                </div>
-                <div class="p-6">
-                    <canvas id="departmentChart" width="400" height="200"></canvas>
-                </div>
-            </div>
+        <!-- Removed extra charts per request -->
 
-            <div class="bg-white rounded-lg shadow-md">
-                <div class="p-6 border-b border-gray-200">
-                    <h3 class="text-lg font-medium text-gray-900">Satisfaction Distribution</h3>
-                </div>
-                <div class="p-6">
-                    <canvas id="satisfactionChart" width="400" height="200"></canvas>
-                </div>
-            </div>
-        </div>
-
-        <!-- Top Performers Table -->
-        <div class="bg-white rounded-lg shadow-md mb-6">
-            <div class="p-6 border-b border-gray-200">
-                <h3 class="text-lg font-medium text-gray-900">Top Performers This Month</h3>
-            </div>
-            <div class="overflow-x-auto">
-                <table class="min-w-full divide-y divide-gray-200">
-                    <thead class="bg-gray-50">
-                        <tr>
-                            <th class="px-6 py-3 text-left text-xs font-medium text-gray-500 uppercase tracking-wider">Rank</th>
-                            <th class="px-6 py-3 text-left text-xs font-medium text-gray-500 uppercase tracking-wider">Staff</th>
-                            <th class="px-6 py-3 text-left text-xs font-medium text-gray-500 uppercase tracking-wider">Department</th>
-                            <th class="px-6 py-3 text-left text-xs font-medium text-gray-500 uppercase tracking-wider">Sales</th>
-                            <th class="px-6 py-3 text-left text-xs font-medium text-gray-500 uppercase tracking-wider">Orders</th>
-                            <th class="px-6 py-3 text-left text-xs font-medium text-gray-500 uppercase tracking-wider">Rating</th>
-                            <th class="px-6 py-3 text-left text-xs font-medium text-gray-500 uppercase tracking-wider">Achievement</th>
-                        </tr>
-                    </thead>
-                    <tbody class="bg-white divide-y divide-gray-200">
-                        @forelse($topPerformers ?? [] as $index => $staff)
-                        <tr class="hover:bg-gray-50">
-                            <td class="px-6 py-4 whitespace-nowrap">
-                                <div class="flex items-center">
-                                    <div class="w-8 h-8 bg-blue-100 rounded-full flex items-center justify-center">
-                                        <span class="text-sm font-bold text-blue-600">{{ $index + 1 }}</span>
-                                    </div>
-                                </div>
-                            </td>
-                            <td class="px-6 py-4 whitespace-nowrap">
-                                <div class="text-sm font-medium text-gray-900">{{ $staff->Staff_Name ?? 'Unknown Staff' }}</div>
-                            </td>
-                            <td class="px-6 py-4 whitespace-nowrap">
-                                <div class="text-sm text-gray-500">{{ $staff->department->Department_Name ?? 'N/A' }}</div>
-                            </td>
-                            <td class="px-6 py-4 whitespace-nowrap">
-                                <div class="text-sm font-medium text-green-600">${{ number_format($staff->orders_sum_final_amount ?? 0, 2) }}</div>
-                            </td>
-                            <td class="px-6 py-4 whitespace-nowrap">
-                                <div class="text-sm text-gray-500">{{ $staff->orders_count ?? 0 }}</div>
-                            </td>
-                            <td class="px-6 py-4 whitespace-nowrap">
-                                <div class="text-sm text-gray-500">{{ $staff->performance_rating ?? 'N/A' }}/5</div>
-                            </td>
-                            <td class="px-6 py-4 whitespace-nowrap">
-                                <div class="text-sm font-medium text-purple-600">{{ $staff->target_achievement ?? 0 }}%</div>
-                            </td>
-                        </tr>
-                        @empty
-                        <tr>
-                            <td colspan="7" class="px-6 py-4 text-center text-gray-500">
-                                No performance data available
-                            </td>
-                        </tr>
-                        @endforelse
-                    </tbody>
-                </table>
-            </div>
-        </div>
+        <!-- Removed top performers table per request -->
 
         <!-- Performance Insights -->
         <div class="grid grid-cols-1 lg:grid-cols-2 gap-6 mb-6">
@@ -235,150 +159,63 @@ document.addEventListener('DOMContentLoaded', function() {
         info: '#06B6D4'
     };
 
-    // Performance Trends Chart
-    const performanceTrendsCtx = document.getElementById('performanceTrendsChart').getContext('2d');
-    new Chart(performanceTrendsCtx, {
-        type: 'line',
-        data: {
-            labels: ['Week 1', 'Week 2', 'Week 3', 'Week 4'],
-            datasets: [{
-                label: 'Average Performance Rating',
-                data: [4.2, 4.1, 4.3, 4.5],
-                borderColor: colors.primary,
-                backgroundColor: colors.primary + '20',
-                tension: 0.4,
-                fill: true
-            }, {
-                label: 'Target Achievement %',
-                data: [85, 88, 92, 95],
-                borderColor: colors.success,
-                backgroundColor: colors.success + '20',
-                tension: 0.4,
-                fill: true,
-                yAxisID: 'y1'
-            }]
-        },
-        options: {
-            responsive: true,
-            maintainAspectRatio: false,
-            interaction: {
-                mode: 'index',
-                intersect: false,
-            },
-            scales: {
-                y: {
-                    type: 'linear',
-                    display: true,
-                    position: 'left',
-                    title: {
-                        display: true,
-                        text: 'Performance Rating'
-                    },
-                    min: 0,
-                    max: 5
-                },
-                y1: {
-                    type: 'linear',
-                    display: true,
-                    position: 'right',
-                    title: {
-                        display: true,
-                        text: 'Achievement %'
-                    },
-                    min: 0,
-                    max: 100,
-                    grid: {
-                        drawOnChartArea: false,
-                    },
-                }
-            },
-            plugins: {
-                legend: {
-                    position: 'top',
-                },
-                title: {
-                    display: true,
-                    text: 'Monthly Performance Trends'
-                }
-            }
-        }
-    });
+    // Performance Trends Chart - real order data
+    (async () => {
+        const resp = await fetch(`{{ route('admin.staff-performances.order-trends') }}?days=30`, { headers: { 'X-Requested-With': 'XMLHttpRequest' } });
+        const data = await resp.json();
 
-    // Department Performance Chart
-    const departmentCtx = document.getElementById('departmentChart').getContext('2d');
-    new Chart(departmentCtx, {
-        type: 'bar',
-        data: {
-            labels: ['Sales', 'Marketing', 'Support', 'Operations'],
-            datasets: [{
-                label: 'Average Performance',
-                data: [4.3, 4.1, 4.5, 4.2],
-                backgroundColor: [
-                    colors.primary,
-                    colors.secondary,
-                    colors.accent,
-                    colors.warning
-                ],
-                borderWidth: 1
-            }]
-        },
-        options: {
-            responsive: true,
-            maintainAspectRatio: false,
-            scales: {
-                y: {
-                    beginAtZero: true,
-                    max: 5,
-                    title: {
+        const performanceTrendsCtx = document.getElementById('performanceTrendsChart').getContext('2d');
+        new Chart(performanceTrendsCtx, {
+            type: 'line',
+            data: {
+                labels: data.labels,
+                datasets: [{
+                    label: 'Sales ($)',
+                    data: data.datasets.sales,
+                    borderColor: colors.primary,
+                    backgroundColor: colors.primary + '20',
+                    tension: 0.35,
+                    fill: true,
+                    borderWidth: 2,
+                    pointRadius: 0
+                }, {
+                    label: 'Orders Processed',
+                    data: data.datasets.orders,
+                    borderColor: colors.secondary,
+                    backgroundColor: colors.secondary + '20',
+                    tension: 0.35,
+                    fill: true,
+                    yAxisID: 'y1',
+                    borderWidth: 2,
+                    pointRadius: 0
+                }]
+            },
+            options: {
+                responsive: true,
+                maintainAspectRatio: false,
+                interaction: { mode: 'index', intersect: false },
+                scales: {
+                    y: {
+                        type: 'linear',
                         display: true,
-                        text: 'Performance Rating'
+                        position: 'left',
+                        ticks: { callback: (val) => '$' + val }
+                    },
+                    y1: {
+                        type: 'linear',
+                        display: true,
+                        position: 'right',
+                        grid: { drawOnChartArea: false }
                     }
-                }
-            },
-            plugins: {
-                legend: {
-                    display: false
                 },
-                title: {
-                    display: true,
-                    text: 'Department Performance Comparison'
+                plugins: {
+                    legend: { position: 'top' }
                 }
             }
-        }
-    });
+        });
+    })();
 
-    // Satisfaction Distribution Chart
-    const satisfactionCtx = document.getElementById('satisfactionChart').getContext('2d');
-    new Chart(satisfactionCtx, {
-        type: 'doughnut',
-        data: {
-            labels: ['1-2 Stars', '3 Stars', '4 Stars', '5 Stars'],
-            datasets: [{
-                data: [5, 15, 45, 35],
-                backgroundColor: [
-                    colors.danger,
-                    colors.warning,
-                    colors.info,
-                    colors.success
-                ],
-                borderWidth: 2,
-                borderColor: '#ffffff'
-            }]
-        },
-        options: {
-            responsive: true,
-            maintainAspectRatio: false,
-            plugins: {
-                legend: {
-                    position: 'bottom',
-                },
-                title: {
-                    display: true,
-                    text: 'Customer Satisfaction Distribution'
-                }
-            }
-        }
-    });
+    // Removed extra charts JS per request
 });
 </script>
 @endsection

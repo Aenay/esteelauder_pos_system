@@ -7,6 +7,7 @@ use App\Models\User;
 use Illuminate\Http\Request;
 use Spatie\Permission\Models\Role;
 use Spatie\Permission\Models\Permission;
+use Spatie\Permission\PermissionRegistrar;
 
 class RolePermissionController extends Controller
 {
@@ -19,8 +20,8 @@ class RolePermissionController extends Controller
         }
         
         $users = User::orderBy('name')->get();
-        $roles = Role::orderBy('name')->get();
-        $permissions = Permission::orderBy('name')->get();
+        $roles = Role::where('guard_name', 'web')->orderBy('name')->get();
+        $permissions = Permission::where('guard_name', 'web')->orderBy('name')->get();
         return view('admin.roles_permissions.index', compact('users', 'roles', 'permissions'));
     }
 
@@ -56,8 +57,13 @@ class RolePermissionController extends Controller
             }
         }
 
+        // Clear cache before and after updating to avoid stale results
+        app()[PermissionRegistrar::class]->forgetCachedPermissions();
+
         $user->syncRoles($roles);
         $user->syncPermissions($permissions);
+
+        app()[PermissionRegistrar::class]->forgetCachedPermissions();
 
         return redirect()->route('admin.roles-permissions.index')->with('success', 'Roles and permissions updated for '.$user->name);
     }

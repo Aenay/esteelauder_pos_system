@@ -74,37 +74,6 @@
                 </div>
             </div>
         </div>
-
-        <!-- Performance Charts Section -->
-        <div class="grid grid-cols-1 lg:grid-cols-2 gap-6 mb-6">
-            <!-- Performance Trends Chart -->
-            <div class="bg-white p-6 rounded-lg shadow-md">
-                <h3 class="font-bold text-lg mb-4">Performance Trends (Last 30 Days)</h3>
-                <canvas id="performanceTrendsChart" width="400" height="200"></canvas>
-            </div>
-
-            <!-- Sales vs Targets Chart -->
-            <div class="bg-white p-6 rounded-lg shadow-md">
-                <h3 class="font-bold text-lg mb-4">Sales vs Targets Comparison</h3>
-                <canvas id="salesVsTargetsChart" width="400" height="200"></canvas>
-            </div>
-        </div>
-
-        <!-- Additional Charts Section -->
-        <div class="grid grid-cols-1 lg:grid-cols-2 gap-6 mb-6">
-            <!-- Satisfaction Ratings Chart -->
-            <div class="bg-white p-6 rounded-lg shadow-md">
-                <h3 class="font-bold text-lg mb-4">Customer Satisfaction Distribution</h3>
-                <canvas id="satisfactionChart" width="400" height="200"></canvas>
-            </div>
-
-            <!-- Department Performance Chart -->
-            <div class="bg-white p-6 rounded-lg shadow-md">
-                <h3 class="font-bold text-lg mb-4">Department Performance Overview</h3>
-                <canvas id="departmentPerformanceChart" width="400" height="200"></canvas>
-            </div>
-        </div>
-
         <!-- Top Performers Section -->
         <div class="bg-white p-6 rounded-lg shadow-md mb-6">
             <h3 class="font-bold text-xl mb-4">Top Performers This Month (Based on Real Sales)</h3>

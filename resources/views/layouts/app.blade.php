@@ -67,48 +67,62 @@
                     <i class="fas fa-cash-register w-6"></i><span>POS</span>
                 </a>
 
-                @role('admin|store-manager')
+                @can('view-products')
                 <a href="{{ route('admin.products.index') }}" class="sidebar-link flex items-center px-4 py-2 rounded-lg {{ request()->is('products') ? 'active' : '' }} dark:hover:bg-pink-600 dark:active:bg-pink-700">
                     <i class="fas fa-box-open w-6"></i><span>Products</span>
                 </a>
+                @endcan
+                @can('orders.view')
                 <a href="{{ route('admin.orders.index')  }}" class="sidebar-link flex items-center px-4 py-2 rounded-lg {{ request()->is('orders') ? 'active' : '' }} dark:hover:bg-pink-600 dark:active:bg-pink-700">
                     <i class="fas fa-receipt w-6"></i><span>Orders</span>
                 </a>
+                @endcan
+                @can('view-staff-performance')
                 <a href="{{ route('admin.staff-performances.index') }}" class="sidebar-link flex items-center px-4 py-2 rounded-lg {{ request()->routeIs('admin.staff-performances.*') ? 'active' : '' }} dark:hover:bg-pink-600 dark:active:bg-pink-700">
                     <i class="fas fa-chart-line w-6"></i><span>Staff Performance</span>
                 </a>
-                @endrole
-                @role('admin')
+                @endcan
+                @can('assign-roles')
                 <a href="{{ route('admin.roles-permissions.index') }}" class="flex items-center px-4 py-2 rounded {{ request()->routeIs('admin.roles-permissions.*') ? 'bg-pink-600 text-white' : 'text-gray-300 hover:bg-pink-700 hover:text-white' }}">
                     <i class="fas fa-user-shield w-5"></i>
                     <span class="ml-3">Roles & Permissions</span>
                 </a>
-                @endrole
+                @endcan
+                @can('view-promotions')
                 <a href="{{ route('promotions.index') }}" class="sidebar-link flex items-center px-4 py-2 rounded-lg {{ request()->is('promotions') ? 'active' : '' }} dark:hover:bg-pink-600 dark:active:bg-pink-700">
                     <i class="fas fa-tags w-6"></i><span>Promotions</span>
                 </a>
-                @role('admin|store-manager')
+                @endcan
+                @can('manage-customers')
                 <a href="{{ route('admin.customers.index') }}" class="sidebar-link flex items-center px-4 py-2 rounded-lg {{ request()->is('admin/customers*') ? 'active' : '' }} dark:hover:bg-pink-600 dark:active:bg-pink-700">
                     <i class="fas fa-users w-6"></i><span>Customers</span>
                 </a>
+                @endcan
+                @can('view-suppliers')
                 <a href="{{ route('admin.suppliers.index') }}" class="sidebar-link flex items-center px-4 py-2 rounded-lg {{ request()->is('admin/suppliers*') ? 'active' : '' }} dark:hover:bg-pink-600 dark:active:bg-pink-700">
                     <i class="fas fa-truck w-6"></i><span>Suppliers</span>
                 </a>
+                @endcan
+                @can('view-deliveries')
                 <a href="{{ route('admin.deliveries.index') }}" class="sidebar-link flex items-center px-4 py-2 rounded-lg {{ request()->is('admin/deliveries*') ? 'active' : '' }} dark:hover:bg-pink-600 dark:active:bg-pink-700">
                     <i class="fas fa-shipping-fast w-6"></i><span>Deliveries</span>
                 </a>
+                @endcan
+                @can('view-branches')
                 <a href="{{ route('admin.branches.index') }}" class="sidebar-link flex items-center px-4 py-2 rounded-lg {{ request()->is('admin/branches*') ? 'active' : '' }} dark:hover:bg-pink-600 dark:active:bg-pink-700">
                     <i class="fas fa-building w-6"></i><span>Branches</span>
                 </a>
+                @endcan
+                @can('view-loyalty')
                 <a href="{{ route('admin.loyalty.index') }}" class="sidebar-link flex items-center px-4 py-2 rounded-lg {{ request()->is('admin/loyalty*') ? 'active' : '' }} dark:hover:bg-pink-600 dark:active:bg-pink-700">
                     <i class="fas fa-star w-6"></i><span>Loyalty Points</span>
                 </a>
-                @endrole
-                @role('admin')
+                @endcan
+                @can('manage-users')
                 <a href="{{ route('admin.users.index') }}" class="sidebar-link flex items-center px-4 py-2 rounded-lg {{ request()->is('admin/users') ? 'active' : '' }} dark:hover:bg-pink-600 dark:active:bg-pink-700">
                     <i class="fas fa-user-shield w-6"></i><span>Admin</span>
                 </a>
-                @endrole
+                @endcan
             </nav>
             <!-- User Profile Section -->
             <div class="p-4 border-t border-gray-700 dark:border-gray-800">

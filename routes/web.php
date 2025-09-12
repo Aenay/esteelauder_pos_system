@@ -46,64 +46,92 @@ Route::middleware(['auth'])->group(function () {
     Route::delete('/profile', [ProfileController::class, 'destroy'])->name('profile.destroy');
 });
 
+// Order viewing routes (admin, manager, and sales-assistant): index, show, receipt
+Route::middleware(['auth', 'verified', 'role:admin|store-manager|sales-assistant'])->prefix('admin')->name('admin.')->group(function () {
+    // Order History - view only
+    Route::get('orders', [OrderController::class, 'index'])->name('orders.index')->middleware('permission:orders.view');
+    Route::get('orders/{order}', [OrderController::class, 'show'])->name('orders.show')->middleware('permission:orders.view');
+    Route::get('orders/{order}/receipt', [OrderController::class, 'receipt'])->name('orders.receipt')->middleware('permission:orders.print');
+});
+
 // Admin Routes
-Route::middleware(['auth', 'verified', 'role:admin|store-manager'])->prefix('admin')->name('admin.')->group(function () {
+Route::middleware(['auth', 'verified'])->prefix('admin')->name('admin.')->group(function () {
     // Dashboard
     Route::get('/dashboard', [AdminDashboardController::class, 'index'])->name('dashboard');
 
-    // Products Management
-    Route::resource('products', ProductController::class);
+    // Products Management - permission based
+    Route::middleware(['permission:view-products'])->group(function () {
+        Route::resource('products', ProductController::class);
+    });
 
-    // Customer Management
-    Route::resource('customers', CustomerController::class);
+    // Customer Management - accessible to users with manage-customers permission
+    Route::middleware(['permission:manage-customers'])->group(function () {
+        Route::resource('customers', CustomerController::class);
+    });
 
-    // Supplier Management
-    Route::resource('suppliers', SupplierController::class);
+    // Supplier Management - permission based
+    Route::middleware(['permission:view-suppliers'])->group(function () {
+        Route::resource('suppliers', SupplierController::class);
+    });
 
-    // Purchase Orders Management
-    Route::resource('purchase-orders', PurchaseOrderController::class);
-    Route::post('purchase-orders/{id}/receive', [PurchaseOrderController::class, 'receiveStock'])->name('purchase-orders.receive');
+    // Purchase Orders Management - permission based
+    Route::middleware(['permission:manage-purchase-orders'])->group(function () {
+        Route::resource('purchase-orders', PurchaseOrderController::class);
+        Route::post('purchase-orders/{id}/receive', [PurchaseOrderController::class, 'receiveStock'])->name('purchase-orders.receive');
+    });
 
-    // Delivery Management
-    Route::resource('deliveries', DeliveryController::class);
-    Route::post('deliveries/{delivery}/update-quantities', [DeliveryController::class, 'updateQuantities'])->name('deliveries.update-quantities');
+    // Delivery Management - permission based
+    Route::middleware(['permission:view-deliveries'])->group(function () {
+        Route::resource('deliveries', DeliveryController::class);
+        Route::post('deliveries/{delivery}/update-quantities', [DeliveryController::class, 'updateQuantities'])->name('deliveries.update-quantities');
+    });
 
-    // Branch Management
-    Route::resource('branches', BranchController::class);
-    Route::get('branches/analytics', [BranchController::class, 'analytics'])->name('branches.analytics');
+    // Branch Management - permission based
+    Route::middleware(['permission:view-branches'])->group(function () {
+        Route::resource('branches', BranchController::class);
+        Route::get('branches/analytics', [BranchController::class, 'analytics'])->name('branches.analytics');
+    });
 
-    // Order History
-    Route::get('orders', [OrderController::class, 'index'])->name('orders.index');
-    Route::get('orders/{order}', [OrderController::class, 'show'])->name('orders.show');
-    Route::get('orders/{order}/receipt', [OrderController::class, 'receipt'])->name('orders.receipt');
+    // Order Management (edit/delete)
+    Route::get('orders/{order}/edit', [OrderController::class, 'edit'])->name('orders.edit')->middleware('permission:orders.edit');
+    Route::patch('orders/{order}', [OrderController::class, 'update'])->name('orders.update')->middleware('permission:orders.edit');
+    Route::delete('orders/{order}', [OrderController::class, 'destroy'])->name('orders.destroy')->middleware('permission:orders.delete');
 
-    // Loyalty Management
-    Route::resource('loyalty', \App\Http\Controllers\Admin\LoyaltyController::class);
-    Route::get('loyalty/{loyalty}/analytics', [\App\Http\Controllers\Admin\LoyaltyController::class, 'analytics'])->name('loyalty.analytics');
-    Route::post('loyalty/{loyalty}/add-points', [\App\Http\Controllers\Admin\LoyaltyController::class, 'addPoints'])->name('loyalty.add-points');
-    Route::post('loyalty/{loyalty}/use-points', [\App\Http\Controllers\Admin\LoyaltyController::class, 'usePoints'])->name('loyalty.use-points');
-    Route::post('loyalty/test-calculation', [\App\Http\Controllers\Admin\LoyaltyController::class, 'testCalculation'])->name('loyalty.test-calculation');
+    // Loyalty Management - permission based
+    Route::middleware(['permission:view-loyalty'])->group(function () {
+        Route::resource('loyalty', \App\Http\Controllers\Admin\LoyaltyController::class);
+        Route::get('loyalty/{loyalty}/analytics', [\App\Http\Controllers\Admin\LoyaltyController::class, 'analytics'])->name('loyalty.analytics');
+        Route::post('loyalty/{loyalty}/add-points', [\App\Http\Controllers\Admin\LoyaltyController::class, 'addPoints'])->name('loyalty.add-points');
+        Route::post('loyalty/{loyalty}/use-points', [\App\Http\Controllers\Admin\LoyaltyController::class, 'usePoints'])->name('loyalty.use-points');
+        Route::post('loyalty/test-calculation', [\App\Http\Controllers\Admin\LoyaltyController::class, 'testCalculation'])->name('loyalty.test-calculation');
+    });
 
-    // Staff Performance Management
-    Route::get('staff-performances/analytics', [StaffPerformanceController::class, 'analytics'])->name('staff-performances.analytics');
-    Route::post('staff-performances/regenerate', [StaffPerformanceController::class, 'regenerateFromOrders'])->name('staff-performances.regenerate');
-    Route::get('staff-performances/real-time', [StaffPerformanceController::class, 'getRealTimePerformance'])->name('staff-performances.real-time');
-    Route::resource('staff-performances', StaffPerformanceController::class);
-    Route::get('staff/{staff}/performance', [StaffPerformanceController::class, 'staffPerformance'])->name('staff.performance');
+    // Staff Performance Management - permission based
+    Route::middleware(['permission:view-staff-performance'])->group(function () {
+        Route::get('staff-performances/analytics', [StaffPerformanceController::class, 'analytics'])->name('staff-performances.analytics');
+        Route::post('staff-performances/regenerate', [StaffPerformanceController::class, 'regenerateFromOrders'])->name('staff-performances.regenerate');
+        Route::get('staff-performances/real-time', [StaffPerformanceController::class, 'getRealTimePerformance'])->name('staff-performances.real-time');
+        Route::get('staff-performances/trends', [StaffPerformanceController::class, 'getTrends'])->name('staff-performances.trends');
+        Route::get('staff-performances/order-trends', [StaffPerformanceController::class, 'getOrderTrends'])->name('staff-performances.order-trends');
+        Route::resource('staff-performances', StaffPerformanceController::class);
+        Route::get('staff/{staff}/performance', [StaffPerformanceController::class, 'staffPerformance'])->name('staff.performance');
+    });
 
-    // Roles & Permissions (Admin only)
-    Route::middleware(['role:admin'])->group(function () {
+    // Roles & Permissions - permission based
+    Route::middleware(['permission:assign-roles'])->group(function () {
         Route::get('roles-permissions', [\App\Http\Controllers\Admin\RolePermissionController::class, 'index'])->name('roles-permissions.index');
         Route::patch('roles-permissions/{user}', [\App\Http\Controllers\Admin\RolePermissionController::class, 'update'])->name('roles-permissions.update');
     });
 
-    // User Management
-    Route::resource('users', UserController::class);
-    Route::get('users/{user}/profile', [UserController::class, 'show'])->name('users.profile');
-    Route::get('users/{user}/edit', [UserController::class, 'edit'])->name('users.edit');
-    Route::patch('users/{user}', [UserController::class, 'update'])->name('users.update');
-    Route::delete('users/{user}', [UserController::class, 'destroy'])->name('users.destroy');
-    Route::patch('users/{user}/password', [UserController::class, 'updatePassword'])->name('users.update-password');
+    // User Management - permission based
+    Route::middleware(['permission:manage-users'])->group(function () {
+        Route::resource('users', UserController::class);
+        Route::get('users/{user}/profile', [UserController::class, 'show'])->name('users.profile');
+        Route::get('users/{user}/edit', [UserController::class, 'edit'])->name('users.edit');
+        Route::patch('users/{user}', [UserController::class, 'update'])->name('users.update');
+        Route::delete('users/{user}', [UserController::class, 'destroy'])->name('users.destroy');
+        Route::patch('users/{user}/password', [UserController::class, 'updatePassword'])->name('users.update-password');
+    });
 });
 
 // Welcome page

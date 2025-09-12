@@ -164,9 +164,20 @@
                     <i class="fas fa-receipt mr-2"></i> Print Receipt
                 </a>
                 
-                <a href="#" class="bg-green-500 hover:bg-green-600 text-white font-bold py-2 px-4 rounded-lg transition-colors">
-                    <i class="fas fa-envelope mr-2"></i> Email Receipt
+                @can('orders.edit')
+                <a href="{{ route('admin.orders.edit', $order) }}" class="bg-green-500 hover:bg-green-600 text-white font-bold py-2 px-4 rounded-lg transition-colors">
+                    <i class="fas fa-edit mr-2"></i> Edit Order
                 </a>
+                @endcan
+                @can('orders.delete')
+                <form action="{{ route('admin.orders.destroy', $order) }}" method="POST" class="inline" onsubmit="return confirm('Delete this order? This action cannot be undone.');">
+                    @csrf
+                    @method('DELETE')
+                    <button type="submit" class="bg-red-600 hover:bg-red-700 text-white font-bold py-2 px-4 rounded-lg transition-colors">
+                        <i class="fas fa-trash mr-2"></i> Delete Order
+                    </button>
+                </form>
+                @endcan
             </div>
         </div>
     </div>
