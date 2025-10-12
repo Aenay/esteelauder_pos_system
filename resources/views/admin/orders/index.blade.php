@@ -30,9 +30,26 @@
                                     <td class="py-3 px-6">#{{ $order->Order_ID }}</td>
                                     <td class="py-3 px-6 font-medium">
                                         @if ($order->customer_type === 'internal' && $order->customer)
-                                            {{ $order->customer->Customer_Name }} (Member)
+                                            <div class="flex flex-col">
+                                                <span class="font-semibold text-gray-900">{{ $order->customer->Customer_Name }}</span>
+                                                <span class="text-xs text-blue-600">
+                                                    <i class="fas fa-crown mr-1"></i>Member
+                                                </span>
+                                            </div>
+                                        @elseif ($order->customer_type === 'walk_in' && $order->customer)
+                                            <div class="flex flex-col">
+                                                <span class="font-semibold text-gray-900">{{ $order->customer->Customer_Name }}</span>
+                                                <span class="text-xs text-gray-500">
+                                                    <i class="fas fa-user mr-1"></i>Walk-in Customer
+                                                </span>
+                                            </div>
                                         @else
-                                            External Customer
+                                            <div class="flex flex-col">
+                                                <span class="font-semibold text-gray-900">External Customer</span>
+                                                <span class="text-xs text-gray-500">
+                                                    <i class="fas fa-shopping-cart mr-1"></i>Guest
+                                                </span>
+                                            </div>
                                         @endif
                                     </td>
                                     <td class="py-3 px-6">{{ optional($order->staff)->Staff_Name ?? '—' }}</td>

@@ -31,13 +31,29 @@ class PromotionFactory extends Factory
         }
         
         return [
-            'Promotion_Name' => $this->faker->words(3, true) . ' Sale',
-            'Description' => $this->faker->sentence(),
-            'Discount_Type' => $discountType,
-            'Discount_Value' => $discountValue,
-            'Start_Date' => $startDate,
-            'End_Date' => $endDate,
-            'Is_Active' => $this->faker->boolean(0.8),
+            'Promotion_Name' => $this->faker->randomElement([
+            'Summer Sale',
+            'Winter Sale',
+            'Spring Festival Sale',
+            'Black Friday Sale',
+            'Cyber Monday Sale',
+            'Christmas Sale',
+            'New Year Sale',
+            'Back to School Sale',
+            'Flash Sale',
+            '11.11 Sale',
+            '12.12 Mega Sale',
+            'Weekend Sale',
+            'Clearance Sale',
+            'Anniversary Sale',
+            'Limited Time Offer',
+        ]),
+        'Description' => $this->faker->sentence(),
+        'Discount_Type' => $discountType,
+        'Discount_Value' => $discountValue,
+        'Start_Date' => $startDate,
+        'End_Date' => $endDate,
+        'Is_Active' => $this->faker->boolean(80),
         ];
     }
 }

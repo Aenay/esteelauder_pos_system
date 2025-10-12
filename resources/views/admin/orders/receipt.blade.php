@@ -51,7 +51,22 @@
             <div>Staff: {{ optional($order->staff)->Staff_Name ?? 'N/A' }}</div>
         </div>
         @if($order->customer)
-        <div class="small mt-6">Customer: {{ $order->customer->Customer_Name }}</div>
+        <div class="small mt-6">
+            <div class="bold">Customer Information</div>
+            <div>Name: {{ $order->customer->Customer_Name }}</div>
+            @if($order->customer->Customer_Phone)
+                <div>Phone: {{ $order->customer->Customer_Phone }}</div>
+            @endif
+            @if($order->customer->Customer_Email)
+                <div>Email: {{ $order->customer->Customer_Email }}</div>
+            @endif
+            <div class="xs">Type: {{ ucfirst($order->customer_type) }} Customer</div>
+            @if($order->customer->loyaltyPoints)
+                <div class="xs">Loyalty: {{ $order->customer->loyalty_tier }} ({{ number_format($order->customer->loyalty_points) }} pts)</div>
+            @endif
+        </div>
+        @else
+        <div class="small mt-6">Customer: External/Guest</div>
         @endif
         <div class="divider"></div>
 

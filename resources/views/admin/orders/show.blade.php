@@ -22,24 +22,78 @@
         <div class="grid grid-cols-1 lg:grid-cols-2 gap-8">
             <!-- Customer Information -->
             <div class="bg-gray-50 rounded-lg p-6">
-                <h2 class="text-xl font-semibold mb-4 text-gray-900">Customer Information</h2>
-                <div class="space-y-3">
-                    <div>
-                        <span class="font-medium text-gray-700">Name:</span>
-                        <span class="ml-2 text-gray-900">{{ $order->customer->Customer_Name ?? 'N/A' }}</span>
-                    </div>
-                    <div>
-                        <span class="font-medium text-gray-700">Email:</span>
-                        <span class="ml-2 text-gray-900">{{ $order->customer->Customer_Email ?? 'N/A' }}</span>
-                    </div>
-                    <div>
-                        <span class="font-medium text-gray-700">Phone:</span>
-                        <span class="ml-2 text-gray-900">{{ $order->customer->Customer_Phone ?? 'N/A' }}</span>
-                    </div>
-                    <div>
-                        <span class="font-medium text-gray-700">Customer Type:</span>
-                        <span class="ml-2 text-gray-900 capitalize">{{ $order->customer_type ?? 'N/A' }}</span>
-                    </div>
+                <h2 class="text-xl font-semibold mb-4 text-gray-900 flex items-center">
+                    <i class="fas fa-user mr-2 text-pink-600"></i>Customer Information
+                </h2>
+                <div class="space-y-4">
+                    @if ($order->customer)
+                        <div class="flex items-center justify-between">
+                            <div>
+                                <span class="font-medium text-gray-700">Name:</span>
+                                <span class="ml-2 text-gray-900 font-semibold">{{ $order->customer->Customer_Name }}</span>
+                            </div>
+                            <div class="flex items-center">
+                                @if ($order->customer_type === 'internal')
+                                    <span class="inline-flex items-center px-2.5 py-0.5 rounded-full text-xs font-medium bg-blue-100 text-blue-800">
+                                        <i class="fas fa-crown mr-1"></i>Member
+                                    </span>
+                                @elseif ($order->customer_type === 'walk_in')
+                                    <span class="inline-flex items-center px-2.5 py-0.5 rounded-full text-xs font-medium bg-gray-100 text-gray-800">
+                                        <i class="fas fa-user mr-1"></i>Walk-in
+                                    </span>
+                                @endif
+                            </div>
+                        </div>
+                        
+                        <div class="grid grid-cols-1 md:grid-cols-2 gap-4">
+                            <div>
+                                <span class="font-medium text-gray-700">Email:</span>
+                                <span class="ml-2 text-gray-900">{{ $order->customer->Customer_Email ?? 'N/A' }}</span>
+                            </div>
+                            <div>
+                                <span class="font-medium text-gray-700">Phone:</span>
+                                <span class="ml-2 text-gray-900">{{ $order->customer->Customer_Phone ?? 'N/A' }}</span>
+                            </div>
+                        </div>
+                        
+                        @if ($order->customer->Customer_Address)
+                        <div>
+                            <span class="font-medium text-gray-700">Address:</span>
+                            <span class="ml-2 text-gray-900">{{ $order->customer->Customer_Address }}</span>
+                        </div>
+                        @endif
+                        
+                        @if ($order->customer->Registration_Date)
+                        <div>
+                            <span class="font-medium text-gray-700">Member Since:</span>
+                            <span class="ml-2 text-gray-900">{{ $order->customer->Registration_Date->format('M j, Y') }}</span>
+                        </div>
+                        @endif
+                        
+                        @if ($order->customer->loyaltyPoints)
+                        <div class="border-t pt-3 mt-3">
+                            <h3 class="font-medium text-gray-700 mb-2 flex items-center">
+                                <i class="fas fa-star mr-2 text-yellow-500"></i>Loyalty Information
+                            </h3>
+                            <div class="grid grid-cols-1 md:grid-cols-2 gap-3">
+                                <div>
+                                    <span class="text-sm text-gray-600">Tier:</span>
+                                    <span class="ml-2 text-sm font-medium text-gray-900 capitalize">{{ $order->customer->loyalty_tier }}</span>
+                                </div>
+                                <div>
+                                    <span class="text-sm text-gray-600">Points:</span>
+                                    <span class="ml-2 text-sm font-medium text-gray-900">{{ number_format($order->customer->loyalty_points) }}</span>
+                                </div>
+                            </div>
+                        </div>
+                        @endif
+                    @else
+                        <div class="text-center py-4">
+                            <i class="fas fa-user-slash text-gray-400 text-3xl mb-2"></i>
+                            <p class="text-gray-600">External Customer</p>
+                            <p class="text-sm text-gray-500">No customer account linked to this order</p>
+                        </div>
+                    @endif
                 </div>
             </div>
 

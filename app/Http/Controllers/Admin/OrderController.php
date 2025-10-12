@@ -11,25 +11,31 @@ class OrderController extends Controller
 {
     public function index()
     {
-        $orders = Order::with(['customer', 'orderDetails.product', 'staff'])->get();
+        $orders = Order::with(['customer.loyaltyPoints', 'orderDetails.product', 'staff'])
+            ->orderBy('created_at', 'desc') // newest first
+            ->get();
+
         return view('admin.orders.index', compact('orders'));
     }
 
     public function show(Order $order)
     {
-        $order->load(['customer', 'orderDetails.product', 'staff']);
+        $order = Order::with(['customer.loyaltyPoints', 'orderDetails.product', 'staff'])
+        ->latest() // ORDER BY created_at DESC
+        ->first();
+
         return view('admin.orders.show', compact('order'));
     }
 
     public function receipt(Order $order)
     {
-        $order->load(['customer', 'orderDetails.product', 'staff']);
+        $order->load(['customer.loyaltyPoints', 'orderDetails.product', 'staff']);
         return view('admin.orders.receipt', compact('order'));
     }
 
     public function edit(Order $order)
     {
-        $order->load(['customer', 'orderDetails.product', 'staff']);
+        $order->load(['customer.loyaltyPoints', 'orderDetails.product', 'staff']);
         $paymentMethods = ['cash', 'card', 'paypal', 'apple'];
         $paymentStatuses = ['pending', 'completed', 'refunded', 'failed'];
         return view('admin.orders.edit', compact('order', 'paymentMethods', 'paymentStatuses'));
