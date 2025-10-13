@@ -9,7 +9,7 @@
             <p class="mt-2 text-gray-600">Track your loyalty points and tier status</p>
         </div>
 
-        @if($customer->loyaltyPoints)
+    @if($loyalty)
             <!-- Loyalty Status Card -->
             <div class="bg-gradient-to-r from-pink-500 to-pink-600 rounded-lg shadow-lg text-white mb-8">
                 <div class="px-6 py-8">
@@ -19,7 +19,7 @@
                             <p class="text-pink-100 mt-1">Loyalty Member</p>
                         </div>
                         <div class="text-right">
-                            <div class="text-4xl font-bold">{{ number_format($customer->loyalty_points) }}</div>
+                            <div class="text-4xl font-bold">{{ number_format($loyalty->current_balance) }}</div>
                             <div class="text-pink-100">Points</div>
                         </div>
                     </div>
@@ -28,7 +28,7 @@
                     <div class="mt-6">
                         <span class="inline-flex items-center px-4 py-2 rounded-full text-sm font-medium bg-white bg-opacity-20 text-white">
                             <i class="fas fa-crown mr-2"></i>
-                            {{ ucfirst($customer->loyalty_tier) }} Tier
+                            {{ ucfirst($loyalty->tier_level) }} Tier
                         </span>
                     </div>
                 </div>
@@ -50,7 +50,7 @@
                             </div>
                             <div class="ml-4">
                                 <p class="text-xl font-semibold text-gray-900">
-                                    {{ ucfirst($customer->loyalty_tier) }}
+                                    {{ ucfirst($loyalty->tier_level) }}
                                 </p>
                                 <p class="text-sm text-gray-500">Loyalty Tier</p>
                             </div>
@@ -72,7 +72,7 @@
                             </div>
                             <div class="ml-4">
                                 <p class="text-xl font-semibold text-gray-900">
-                                    {{ number_format($customer->loyalty_points) }}
+                                    {{ number_format($loyalty->current_balance) }}
                                 </p>
                                 <p class="text-sm text-gray-500">Available Points</p>
                             </div>
@@ -88,7 +88,7 @@
                 </div>
                 <div class="px-6 py-4">
                     <div class="space-y-4">
-                        @if($customer->loyalty_tier === 'bronze')
+                        @if($loyalty->tier_level === 'bronze')
                             <div class="flex items-start">
                                 <div class="flex-shrink-0">
                                     <div class="h-6 w-6 rounded-full bg-yellow-100 flex items-center justify-center">
@@ -109,7 +109,7 @@
                                     <p class="text-sm text-gray-900">Early access to new products</p>
                                 </div>
                             </div>
-                        @elseif($customer->loyalty_tier === 'silver')
+                        @elseif($loyalty->tier_level === 'silver')
                             <div class="flex items-start">
                                 <div class="flex-shrink-0">
                                     <div class="h-6 w-6 rounded-full bg-gray-100 flex items-center justify-center">
@@ -140,7 +140,7 @@
                                     <p class="text-sm text-gray-900">Exclusive member events</p>
                                 </div>
                             </div>
-                        @elseif($customer->loyalty_tier === 'gold')
+                        @elseif($loyalty->tier_level === 'gold')
                             <div class="flex items-start">
                                 <div class="flex-shrink-0">
                                     <div class="h-6 w-6 rounded-full bg-yellow-100 flex items-center justify-center">
@@ -213,7 +213,7 @@
                     <h3 class="text-lg font-medium text-gray-900">Recent Orders</h3>
                 </div>
                 <div class="divide-y divide-gray-200">
-                    @foreach($customer->orders()->with('orderDetails')->latest()->take(5)->get() as $order)
+                    @foreach($recentOrders as $order)
                         <div class="px-6 py-4">
                             <div class="flex items-center justify-between">
                                 <div>
