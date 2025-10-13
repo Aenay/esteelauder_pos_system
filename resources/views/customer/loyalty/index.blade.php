@@ -23,7 +23,7 @@
                             <div class="text-pink-100">Points</div>
                         </div>
                     </div>
-                    
+
                     <!-- Tier Badge -->
                     <div class="mt-6">
                         <span class="inline-flex items-center px-4 py-2 rounded-full text-sm font-medium bg-white bg-opacity-20 text-white">
@@ -244,7 +244,7 @@
                 <h3 class="mt-2 text-sm font-medium text-gray-900">No loyalty points yet</h3>
                 <p class="mt-1 text-sm text-gray-500">Start shopping to earn loyalty points!</p>
                 <div class="mt-6">
-                    <a href="{{ route('customer.orders.index') }}" 
+                    <a href="{{ route('customer.orders.index') }}"
                        class="inline-flex items-center px-4 py-2 border border-transparent shadow-sm text-sm font-medium rounded-md text-white bg-pink-600 hover:bg-pink-700 focus:outline-none focus:ring-2 focus:ring-offset-2 focus:ring-pink-500">
                         <i class="fas fa-shopping-bag mr-2"></i>
                         View My Orders

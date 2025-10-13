@@ -39,23 +39,33 @@
                     <div class="flex items-center space-x-4">
                         @auth('customer')
                             <div class="flex items-center space-x-4">
-                                <span class="text-white">
-                                    <i class="fas fa-user mr-1"></i>
-                                    Welcome, {{ Auth::guard('customer')->user()->Customer_Name }}
-                                </span>
-                                <div class="flex space-x-2">
-                                    <a href="{{ route('customer.orders.index') }}" class="text-white hover:text-pink-200 px-3 py-2 rounded-md text-sm font-medium">
-                                        <i class="fas fa-shopping-bag mr-1"></i>My Orders
-                                    </a>
-                                    <a href="{{ route('customer.loyalty') }}" class="text-white hover:text-pink-200 px-3 py-2 rounded-md text-sm font-medium">
-                                        <i class="fas fa-star mr-1"></i>Loyalty Points
-                                    </a>
-                                    <form method="POST" action="{{ route('customer.logout') }}" class="inline">
-                                        @csrf
-                                        <button type="submit" class="text-white hover:text-pink-200 px-3 py-2 rounded-md text-sm font-medium">
-                                            <i class="fas fa-sign-out-alt mr-1"></i>Logout
-                                        </button>
-                                    </form>
+                                <div class="relative inline-block text-left">
+                                    <button id="profileButton" type="button" class="inline-flex justify-center w-full rounded-md border border-transparent shadow-sm px-3 py-2 bg-pink-600 text-white text-sm font-medium hover:bg-pink-700 focus:outline-none" aria-expanded="true" aria-haspopup="true">
+                                        <i class="fas fa-user mr-2"></i>
+                                        {{ Auth::guard('customer')->user()->Customer_Name }}
+                                        <i class="fas fa-caret-down ml-2"></i>
+                                    </button>
+
+                                    <!-- Dropdown panel -->
+                                    <div id="profileDropdown" class="origin-top-right absolute right-0 mt-2 w-48 rounded-md shadow-lg bg-white ring-1 ring-black ring-opacity-5 hidden">
+                                        <div class="py-1" role="menu" aria-orientation="vertical" aria-labelledby="profileButton">
+                                            <a href="{{ route('customer.profile.edit') }}" class="block px-4 py-2 text-sm text-gray-700 hover:bg-gray-100" role="menuitem">
+                                                <i class="fas fa-edit mr-2"></i>Edit profile
+                                            </a>
+                                            <a href="{{ route('customer.orders.index') }}" class="block px-4 py-2 text-sm text-gray-700 hover:bg-gray-100" role="menuitem">
+                                                <i class="fas fa-shopping-bag mr-2"></i>My Orders
+                                            </a>
+                                            <a href="{{ route('customer.loyalty') }}" class="block px-4 py-2 text-sm text-gray-700 hover:bg-gray-100" role="menuitem">
+                                                <i class="fas fa-star mr-2"></i>Loyalty Points
+                                            </a>
+                                            <form method="POST" action="{{ route('customer.logout') }}">
+                                                @csrf
+                                                <button type="submit" class="w-full text-left block px-4 py-2 text-sm text-gray-700 hover:bg-gray-100">
+                                                    <i class="fas fa-sign-out-alt mr-2"></i>Logout
+                                                </button>
+                                            </form>
+                                        </div>
+                                    </div>
                                 </div>
                             </div>
                         @else
@@ -72,6 +82,20 @@
                 </div>
             </div>
         </nav>
+
+        <script>
+            // Simple toggle for the profile dropdown
+            document.addEventListener('click', function (e) {
+                var btn = document.getElementById('profileButton');
+                var dropdown = document.getElementById('profileDropdown');
+                if (!btn) return;
+                if (btn.contains(e.target)) {
+                    dropdown.classList.toggle('hidden');
+                } else if (!dropdown.contains(e.target)) {
+                    dropdown.classList.add('hidden');
+                }
+            });
+        </script>
 
         <!-- Page Content -->
         <main class="py-6">

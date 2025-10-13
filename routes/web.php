@@ -156,6 +156,9 @@ Route::prefix('customer')->name('customer.')->group(function () {
         Route::get('orders', [\App\Http\Controllers\CustomerOrderController::class, 'index'])->name('orders.index');
         Route::get('orders/{order}', [\App\Http\Controllers\CustomerOrderController::class, 'show'])->name('orders.show');
         Route::get('loyalty', [\App\Http\Controllers\CustomerOrderController::class, 'loyalty'])->name('loyalty');
+    // Profile routes for customers
+    Route::get('profile/edit', [\App\Http\Controllers\CustomerProfileController::class, 'edit'])->name('profile.edit');
+    Route::patch('profile', [\App\Http\Controllers\CustomerProfileController::class, 'update'])->name('profile.update');
     });
 });
 
