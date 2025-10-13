@@ -134,6 +134,31 @@ Route::middleware(['auth', 'verified'])->prefix('admin')->name('admin.')->group(
     });
 });
 
+// Customer Routes
+Route::prefix('customer')->name('customer.')->group(function () {
+    // Customer Welcome Page
+    Route::get('/', function () {
+        return view('customer.welcome');
+    })->name('welcome');
+
+    // Customer Authentication Routes
+    Route::middleware('guest:customer')->group(function () {
+        Route::get('login', [\App\Http\Controllers\Auth\CustomerAuthController::class, 'showLoginForm'])->name('login');
+        Route::post('login', [\App\Http\Controllers\Auth\CustomerAuthController::class, 'login']);
+        Route::get('register', [\App\Http\Controllers\Auth\CustomerAuthController::class, 'showRegisterForm'])->name('register');
+        Route::post('register', [\App\Http\Controllers\Auth\CustomerAuthController::class, 'register']);
+    });
+
+    Route::post('logout', [\App\Http\Controllers\Auth\CustomerAuthController::class, 'logout'])->name('logout');
+
+    // Customer Protected Routes
+    Route::middleware('auth:customer')->group(function () {
+        Route::get('orders', [\App\Http\Controllers\CustomerOrderController::class, 'index'])->name('orders.index');
+        Route::get('orders/{order}', [\App\Http\Controllers\CustomerOrderController::class, 'show'])->name('orders.show');
+        Route::get('loyalty', [\App\Http\Controllers\CustomerOrderController::class, 'loyalty'])->name('loyalty');
+    });
+});
+
 // Welcome page
 Route::get('/', function () {
     return view('auth.login');

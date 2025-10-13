@@ -25,6 +25,7 @@ class CustomerFactory extends Factory
             'Customer_Email' => $this->faker->unique()->safeEmail(),
             'Customer_Type' => $this->faker->randomElement($customerTypes),
             'Registration_Date' => $this->faker->dateTimeBetween('-2 years', 'now'),
+            'password' => bcrypt('password'), // Default password for testing
         ];
     }
 }
