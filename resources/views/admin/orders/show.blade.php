@@ -8,7 +8,7 @@
             <div class="flex justify-between items-start">
                 <div>
                     <h1 class="text-3xl font-bold text-gray-900">Order #{{ $order->Order_ID }}</h1>
-                    <p class="text-gray-600 mt-2">Placed on {{ $order->Order_Date->format('F j, Y \a\t g:i A') }}</p>
+                    <p class="text-gray-600 mt-2">Placed on {{ $order->Order_Date->format('F j, Y') }}</p>
                     <p class="text-gray-600 mt-1">Staff: <span class="font-medium text-gray-900">{{ optional($order->staff)->Staff_Name ?? 'N/A' }}</span></p>
                 </div>
                 <div class="text-right">

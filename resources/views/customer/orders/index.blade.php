@@ -74,7 +74,7 @@
                                             </div>
                                             <div class="mt-1 flex items-center text-sm text-gray-500">
                                                 <i class="fas fa-calendar mr-1"></i>
-                                                {{ $order->Order_Date->format('M j, Y \a\t g:i A') }}
+                                            {{ $order->Order_Date->format('M j, Y') }}
                                             </div>
                                             <div class="mt-1 text-sm text-gray-500">
                                                 <i class="fas fa-user mr-1"></i>

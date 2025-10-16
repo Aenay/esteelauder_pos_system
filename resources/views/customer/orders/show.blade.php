@@ -8,7 +8,7 @@
             <div class="flex items-center justify-between">
                 <div>
                     <h1 class="text-3xl font-bold text-gray-900">Order #{{ $order->Order_ID }}</h1>
-                    <p class="mt-2 text-gray-600">Ordered on {{ $order->Order_Date->format('F j, Y \a\t g:i A') }}</p>
+                    <p class="mt-2 text-gray-600">Ordered on {{ $order->Order_Date->format('F j, Y') }}</p>
                 </div>
                 <a href="{{ route('customer.orders.index') }}" 
                    class="inline-flex items-center px-4 py-2 border border-gray-300 shadow-sm text-sm font-medium rounded-md text-gray-700 bg-white hover:bg-gray-50 focus:outline-none focus:ring-2 focus:ring-offset-2 focus:ring-pink-500">
