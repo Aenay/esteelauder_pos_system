@@ -111,7 +111,23 @@
         <!-- Deliveries Table -->
         <div class="bg-white overflow-hidden shadow-sm rounded-lg">
             <div class="px-6 py-4 border-b border-gray-200">
-                <h3 class="text-lg font-medium text-gray-900">Recent Deliveries</h3>
+                <div class="flex items-center justify-between">
+                    <h3 class="text-lg font-medium text-gray-900">Recent Deliveries</h3>
+                    <nav class="-mb-px flex space-x-6">
+                        <a href="{{ route('admin.deliveries.index', ['type' => 'all']) }}" 
+                           class="py-2 px-1 border-b-2 font-medium text-sm {{ $type === 'all' ? 'border-pink-500 text-pink-600' : 'border-transparent text-gray-500 hover:text-gray-700 hover:border-gray-300' }}">
+                            <i class="fas fa-list mr-2"></i>All
+                        </a>
+                        <a href="{{ route('admin.deliveries.index', ['type' => 'customer']) }}" 
+                           class="py-2 px-1 border-b-2 font-medium text-sm {{ $type === 'customer' ? 'border-pink-500 text-pink-600' : 'border-transparent text-gray-500 hover:text-gray-700 hover:border-gray-300' }}">
+                            <i class="fas fa-users mr-2"></i>Customer
+                        </a>
+                        <a href="{{ route('admin.deliveries.index', ['type' => 'supplier']) }}" 
+                           class="py-2 px-1 border-b-2 font-medium text-sm {{ $type === 'supplier' ? 'border-pink-500 text-pink-600' : 'border-transparent text-gray-500 hover:text-gray-700 hover:border-gray-300' }}">
+                            <i class="fas fa-truck mr-2"></i>Supplier
+                        </a>
+                    </nav>
+                </div>
             </div>
             
             @if(session('success'))
@@ -131,7 +147,7 @@
                     <thead class="bg-gray-50">
                         <tr>
                             <th class="px-6 py-3 text-left text-xs font-medium text-gray-500 uppercase tracking-wider">Reference</th>
-                            <th class="px-6 py-3 text-left text-xs font-medium text-gray-500 uppercase tracking-wider">Supplier</th>
+                            <th class="px-6 py-3 text-left text-xs font-medium text-gray-500 uppercase tracking-wider">Party</th>
                             <th class="px-6 py-3 text-left text-xs font-medium text-gray-500 uppercase tracking-wider">Expected Date</th>
                             <th class="px-6 py-3 text-left text-xs font-medium text-gray-500 uppercase tracking-wider">Status</th>
                             <th class="px-6 py-3 text-left text-xs font-medium text-gray-500 uppercase tracking-wider">Total Amount</th>
@@ -148,7 +164,13 @@
                                 @endif
                             </td>
                             <td class="px-6 py-4 whitespace-nowrap">
-                                <div class="text-sm text-gray-900">{{ $delivery->supplier->Supplier_Name }}</div>
+                                @if($delivery->delivery_type === 'supplier')
+                                    <div class="text-sm text-gray-900">{{ $delivery->supplier->Supplier_Name }}</div>
+                                    <div class="text-xs text-green-600"><i class="fas fa-truck mr-1"></i>Supplier Delivery</div>
+                                @else
+                                    <div class="text-sm text-gray-900">{{ optional(optional($delivery->order)->customer)->Customer_Name ?? 'Customer' }}</div>
+                                    <div class="text-xs text-blue-600"><i class="fas fa-user mr-1"></i>Customer Delivery</div>
+                                @endif
                                 @if($delivery->Carrier)
                                     <div class="text-sm text-gray-500">{{ $delivery->Carrier }}</div>
                                 @endif

@@ -42,7 +42,15 @@
             </p>
 
             <!-- Features -->
-            <div class="grid grid-cols-1 md:grid-cols-3 gap-8 mb-12">
+            <div class="grid grid-cols-1 md:grid-cols-4 gap-8 mb-12">
+                <div class="bg-white rounded-lg shadow-md p-6">
+                    <div class="mx-auto h-12 w-12 flex items-center justify-center rounded-full bg-pink-100 mb-4">
+                        <i class="fas fa-store text-pink-600 text-xl"></i>
+                    </div>
+                    <h3 class="text-lg font-semibold text-gray-900 mb-2">Shop Online</h3>
+                    <p class="text-gray-600">Browse and purchase our premium beauty products</p>
+                </div>
+                
                 <div class="bg-white rounded-lg shadow-md p-6">
                     <div class="mx-auto h-12 w-12 flex items-center justify-center rounded-full bg-blue-100 mb-4">
                         <i class="fas fa-shopping-bag text-blue-600 text-xl"></i>
@@ -71,15 +79,20 @@
             <!-- Action Buttons -->
             <div class="flex flex-col sm:flex-row gap-4 justify-center">
                 @auth('customer')
-                    <a href="{{ route('customer.orders.index') }}" 
+                    <a href="{{ route('customer.dashboard') }}" 
                        class="inline-flex items-center px-6 py-3 border border-transparent text-base font-medium rounded-md text-white bg-pink-600 hover:bg-pink-700 focus:outline-none focus:ring-2 focus:ring-offset-2 focus:ring-pink-500">
+                        <i class="fas fa-tachometer-alt mr-2"></i>
+                        Go to Dashboard
+                    </a>
+                    <a href="{{ route('customer.shop.index') }}" 
+                       class="inline-flex items-center px-6 py-3 border border-transparent text-base font-medium rounded-md text-pink-700 bg-pink-100 hover:bg-pink-200 focus:outline-none focus:ring-2 focus:ring-offset-2 focus:ring-pink-500">
+                        <i class="fas fa-store mr-2"></i>
+                        Start Shopping
+                    </a>
+                    <a href="{{ route('customer.orders.index') }}" 
+                       class="inline-flex items-center px-6 py-3 border border-transparent text-base font-medium rounded-md text-pink-700 bg-pink-100 hover:bg-pink-200 focus:outline-none focus:ring-2 focus:ring-offset-2 focus:ring-pink-500">
                         <i class="fas fa-shopping-bag mr-2"></i>
                         View My Orders
-                    </a>
-                    <a href="{{ route('customer.loyalty') }}" 
-                       class="inline-flex items-center px-6 py-3 border border-transparent text-base font-medium rounded-md text-pink-700 bg-pink-100 hover:bg-pink-200 focus:outline-none focus:ring-2 focus:ring-offset-2 focus:ring-pink-500">
-                        <i class="fas fa-star mr-2"></i>
-                        Check Loyalty Points
                     </a>
                 @else
                     <a href="{{ route('customer.login') }}" 

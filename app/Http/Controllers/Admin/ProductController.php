@@ -4,6 +4,7 @@ namespace App\Http\Controllers\Admin;
 
 use App\Http\Controllers\Controller;
 use App\Models\Product;
+use App\Models\Supplier;
 use Illuminate\Http\Request;
 use Illuminate\Support\Facades\Storage;
 
@@ -12,7 +13,7 @@ class ProductController extends Controller
     public function index(Request $request)
     {
         $query = $request->input('search');
-        $products = Product::query()
+        $products = Product::with('supplier')
             ->when($query, function ($q, $query) {
                 return $q->where('Product_Name', 'like', "%{$query}%")
                          ->orWhere('SKU', 'like', "%{$query}%");
@@ -24,7 +25,8 @@ class ProductController extends Controller
 
     public function create()
     {
-        return view('admin.products.create');
+        $suppliers = Supplier::orderBy('Supplier_Name')->get();
+        return view('admin.products.create', compact('suppliers'));
     }
 
     public function store(Request $request)
@@ -35,6 +37,7 @@ class ProductController extends Controller
             'price' => 'required|numeric|min:0',
             'stock' => 'required|integer|min:0',
             'description' => 'nullable|string',
+            'supplier_id' => 'nullable|exists:suppliers,Supplier_ID',
             'image' => 'nullable|image|mimes:jpeg,png,jpg,gif,svg|max:2048',
         ]);
 
@@ -44,6 +47,7 @@ class ProductController extends Controller
             'Price' => $validated['price'],
             'Quantity_on_Hand' => $validated['stock'],
             'description' => $validated['description'],
+            'Supplier_ID' => $validated['supplier_id'],
         ];
 
         if ($request->hasFile('image')) {
@@ -63,7 +67,8 @@ class ProductController extends Controller
 
     public function edit(Product $product)
     {
-        return view('admin.products.edit', compact('product'));
+        $suppliers = Supplier::orderBy('Supplier_Name')->get();
+        return view('admin.products.edit', compact('product', 'suppliers'));
     }
 
     public function update(Request $request, Product $product)
@@ -74,6 +79,7 @@ class ProductController extends Controller
             'price' => 'required|numeric|min:0',
             'stock' => 'required|integer|min:0',
             'description' => 'nullable|string',
+            'supplier_id' => 'nullable|exists:suppliers,Supplier_ID',
             'image' => 'nullable|image|mimes:jpeg,png,jpg,gif,svg|max:2048',
         ]);
 
@@ -83,6 +89,7 @@ class ProductController extends Controller
             'Price' => $validated['price'],
             'Quantity_on_Hand' => $validated['stock'],
             'description' => $validated['description'],
+            'Supplier_ID' => $validated['supplier_id'],
         ];
 
         if ($request->hasFile('image')) {

@@ -38,7 +38,7 @@ class CustomerAuthController extends Controller
             Auth::guard('customer')->login($customer, $request->boolean('remember'));
             $request->session()->regenerate();
 
-            return redirect()->intended(route('customer.orders.index'));
+            return redirect()->intended(route('customer.dashboard'));
         }
 
         return back()->withErrors([
@@ -79,7 +79,7 @@ class CustomerAuthController extends Controller
 
         Auth::guard('customer')->login($customer);
 
-        return redirect(route('customer.orders.index'));
+        return redirect(route('customer.dashboard'));
     }
 
     /**

@@ -32,6 +32,7 @@
                                 <th class="py-3 px-6 text-left">Photo</th>
                                 <th class="py-3 px-6 text-left">SKU</th>
                                 <th class="py-3 px-6 text-left">Product Name</th>
+                                <th class="py-3 px-6 text-left">Supplier</th>
                                 <th class="py-3 px-6 text-left">Price</th>
                                 <th class="py-3 px-6 text-center">Stock</th>
                                 <th class="py-3 px-6 text-center">Actions</th>
@@ -51,6 +52,16 @@
                                     </td>
                                     <td class="py-3 px-6">{{ $product->SKU }}</td>
                                     <td class="py-3 px-6 font-medium">{{ $product->Product_Name }}</td>
+                                    <td class="py-3 px-6">
+                                        @if($product->supplier)
+                                            <span class="inline-flex items-center px-2 py-1 rounded-full text-xs bg-green-100 text-green-800">
+                                                <i class="fas fa-truck mr-1"></i>
+                                                {{ $product->supplier->Supplier_Name }}
+                                            </span>
+                                        @else
+                                            <span class="text-gray-500 text-sm">No supplier</span>
+                                        @endif
+                                    </td>
                                     <td class="py-3 px-6">${{ number_format($product->Price, 2) }}</td>
                                     <td class="py-3 px-6 text-center">{{ $product->Quantity_on_Hand }}</td>
                                     <td class="py-3 px-6 text-center">
@@ -64,7 +75,7 @@
                                 </tr>
                             @empty
                                 <tr>
-                                    <td colspan="6" class="py-6 text-center text-gray-500">No products found.</td>
+                                    <td colspan="7" class="py-6 text-center text-gray-500">No products found.</td>
                                 </tr>
                             @endforelse
                         </tbody>

@@ -80,6 +80,11 @@ Route::middleware(['auth', 'verified'])->prefix('admin')->name('admin.')->group(
         Route::post('purchase-orders/{id}/receive', [PurchaseOrderController::class, 'receiveStock'])->name('purchase-orders.receive');
     });
 
+    // Supplier Orders Management - permission based
+    Route::middleware(['permission:manage-purchase-orders'])->group(function () {
+        Route::resource('supplier-orders', \App\Http\Controllers\Admin\SupplierOrderController::class);
+    });
+
     // Delivery Management - permission based
     Route::middleware(['permission:view-deliveries'])->group(function () {
         Route::resource('deliveries', DeliveryController::class);
@@ -153,12 +158,31 @@ Route::prefix('customer')->name('customer.')->group(function () {
 
     // Customer Protected Routes
     Route::middleware('auth:customer')->group(function () {
+        // Dashboard
+        Route::get('dashboard', [\App\Http\Controllers\CustomerDashboardController::class, 'index'])->name('dashboard');
+        
+        // Shop and Cart Routes
+        Route::get('shop', [\App\Http\Controllers\CustomerCartController::class, 'index'])->name('shop.index');
+        Route::get('cart', [\App\Http\Controllers\CustomerCartController::class, 'showCart'])->name('cart.show');
+        
+        // Cart AJAX Routes
+        Route::prefix('cart')->name('cart.')->group(function () {
+            Route::post('add', [\App\Http\Controllers\CustomerCartController::class, 'addToCart'])->name('add');
+            Route::post('update', [\App\Http\Controllers\CustomerCartController::class, 'updateCart'])->name('update');
+            Route::post('remove', [\App\Http\Controllers\CustomerCartController::class, 'removeFromCart'])->name('remove');
+            Route::post('clear', [\App\Http\Controllers\CustomerCartController::class, 'clearCart'])->name('clear');
+            Route::get('get', [\App\Http\Controllers\CustomerCartController::class, 'getCart'])->name('get');
+            Route::post('checkout', [\App\Http\Controllers\CustomerCartController::class, 'checkout'])->name('checkout');
+        });
+        
+        // Order and Profile Routes
         Route::get('orders', [\App\Http\Controllers\CustomerOrderController::class, 'index'])->name('orders.index');
         Route::get('orders/{order}', [\App\Http\Controllers\CustomerOrderController::class, 'show'])->name('orders.show');
         Route::get('loyalty', [\App\Http\Controllers\CustomerOrderController::class, 'loyalty'])->name('loyalty');
-    // Profile routes for customers
-    Route::get('profile/edit', [\App\Http\Controllers\CustomerProfileController::class, 'edit'])->name('profile.edit');
-    Route::patch('profile', [\App\Http\Controllers\CustomerProfileController::class, 'update'])->name('profile.update');
+        
+        // Profile routes for customers
+        Route::get('profile/edit', [\App\Http\Controllers\CustomerProfileController::class, 'edit'])->name('profile.edit');
+        Route::patch('profile', [\App\Http\Controllers\CustomerProfileController::class, 'update'])->name('profile.update');
     });
 });
 

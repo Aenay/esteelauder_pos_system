@@ -9,13 +9,29 @@ use Illuminate\Support\Facades\DB;
 
 class OrderController extends Controller
 {
-    public function index()
+    public function index(Request $request)
     {
-        $orders = Order::with(['customer.loyaltyPoints', 'orderDetails.product', 'staff'])
-            ->orderBy('created_at', 'desc') // newest first
-            ->get();
+        $type = $request->get('type', 'all'); // 'customer', 'supplier', or 'all'
+        
+        $query = Order::with(['customer.loyaltyPoints', 'orderDetails.product', 'staff']);
+        
+        // Filter by order type
+        if ($type === 'customer') {
+            $query->where('customer_type', '!=', 'supplier');
+        } elseif ($type === 'supplier') {
+            $query->where('customer_type', 'supplier');
+        }
+        
+        $orders = $query->orderBy('created_at', 'desc')->get();
+        
+        // Get statistics
+        $stats = [
+            'total' => Order::count(),
+            'customer_orders' => Order::where('customer_type', '!=', 'supplier')->count(),
+            'supplier_orders' => Order::where('customer_type', 'supplier')->count(),
+        ];
 
-        return view('admin.orders.index', compact('orders'));
+        return view('admin.orders.index', compact('orders', 'type', 'stats'));
     }
 
     public function show(Order $order)

@@ -223,6 +223,32 @@
                                     <p class="text-sm text-gray-500">
                                         {{ $order->Order_Date->format('M j, Y') }} - ${{ number_format($order->Final_Amount, 2) }}
                                     </p>
+
+                                    <div class="mt-1 flex items-center">
+                                        @php
+                                            $customerDelivery = $order->deliveries->where('delivery_type', 'customer')->sortByDesc('created_at')->first();
+                                        @endphp
+
+                                        @if($customerDelivery)
+                                            {!! $customerDelivery->status_badge !!}
+                                            @if($customerDelivery->Status !== 'delivered')
+                                                <span class="ml-2 text-xs text-gray-500">
+                                                    Expected {{ optional($customerDelivery->Expected_Delivery_Date)->format('M j, Y') }}
+                                                    @if($customerDelivery->is_overdue)
+                                                        <span class="ml-1 text-red-600 font-medium">Overdue</span>
+                                                    @endif
+                                                </span>
+                                            @else
+                                                <span class="ml-2 text-xs text-gray-500">
+                                                    Delivered {{ optional($customerDelivery->Actual_Delivery_Date)->format('M j, Y') }}
+                                                </span>
+                                            @endif
+                                        @else
+                                            <span class="inline-flex items-center px-2.5 py-0.5 rounded-full text-xs font-medium bg-gray-100 text-gray-800">
+                                                No delivery
+                                            </span>
+                                        @endif
+                                    </div>
                                 </div>
                                 <div class="text-right">
                                     <p class="text-sm font-medium text-pink-600">

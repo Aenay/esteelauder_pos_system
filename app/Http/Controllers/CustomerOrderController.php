@@ -25,7 +25,7 @@ class CustomerOrderController extends Controller
         $customer->load('loyaltyPoints');
 
         // Get customer's orders with related data
-        $orders = Order::with(['orderDetails.product', 'staff'])
+        $orders = Order::with(['orderDetails.product', 'staff', 'deliveries'])
             ->where('Customer_ID', $customer->Customer_ID)
             ->orderBy('created_at', 'desc')
             ->get();
@@ -51,7 +51,7 @@ class CustomerOrderController extends Controller
         }
 
         // Load the order with all related data
-        $order->load(['customer.loyaltyPoints', 'orderDetails.product', 'staff']);
+        $order->load(['customer.loyaltyPoints', 'orderDetails.product', 'staff', 'deliveries']);
 
         return view('customer.orders.show', compact('order', 'customer'));
     }
@@ -93,6 +93,7 @@ class CustomerOrderController extends Controller
 
         // Fetch the customer’s 5 latest orders
         $recentOrders = \App\Models\Order::where('Customer_ID', $customer->Customer_ID)
+            ->with('deliveries')
             ->orderBy('created_at', 'desc')
             ->take(5)
             ->get();

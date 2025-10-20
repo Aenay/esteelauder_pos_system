@@ -20,6 +20,11 @@ class Supplier extends Model
     ];
 
     // Relationships
+    public function products()
+    {
+        return $this->hasMany(Product::class, 'Supplier_ID', 'Supplier_ID');
+    }
+
     public function purchaseOrders()
     {
         return $this->hasMany(PurchaseOrder::class, 'Supplier_ID', 'Supplier_ID');

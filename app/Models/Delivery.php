@@ -23,6 +23,8 @@ class Delivery extends Model
         'Total_Amount',
         'Tracking_Number',
         'Carrier',
+        'delivery_type',
+        'Order_ID',
     ];
 
     protected $casts = [
@@ -35,6 +37,11 @@ class Delivery extends Model
     public function supplier()
     {
         return $this->belongsTo(Supplier::class, 'Supplier_ID', 'Supplier_ID');
+    }
+
+    public function order()
+    {
+        return $this->belongsTo(Order::class, 'Order_ID', 'Order_ID');
     }
 
     public function deliveryDetails()
@@ -70,5 +77,15 @@ class Delivery extends Model
         }
         
         return now()->diffInDays($this->Expected_Delivery_Date, false);
+    }
+
+    public function scopeSupplier($query)
+    {
+        return $query->where('delivery_type', 'supplier');
+    }
+
+    public function scopeCustomer($query)
+    {
+        return $query->where('delivery_type', 'customer');
     }
 }

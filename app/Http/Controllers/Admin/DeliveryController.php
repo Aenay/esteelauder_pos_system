@@ -18,21 +18,32 @@ class DeliveryController extends Controller
      */
     public function index()
     {
-        $deliveries = Delivery::with(['supplier', 'deliveryDetails.product'])
+        $type = request()->query('type', 'supplier');
+
+        $deliveries = Delivery::with(['supplier', 'order.customer', 'deliveryDetails.product'])
+            ->when($type !== 'all', function ($q) use ($type) {
+                $q->where('delivery_type', $type);
+            })
             ->orderBy('Expected_Delivery_Date', 'asc')
-            ->paginate(15);
+            ->paginate(15)
+            ->withQueryString();
+
+        $base = Delivery::query();
+        if ($type !== 'all') {
+            $base->where('delivery_type', $type);
+        }
 
         $stats = [
-            'total' => Delivery::count(),
-            'pending' => Delivery::where('Status', 'pending')->count(),
-            'in_transit' => Delivery::where('Status', 'in_transit')->count(),
-            'delivered' => Delivery::where('Status', 'delivered')->count(),
-            'overdue' => Delivery::where('Status', 'pending')
+            'total' => (clone $base)->count(),
+            'pending' => (clone $base)->where('Status', 'pending')->count(),
+            'in_transit' => (clone $base)->where('Status', 'in_transit')->count(),
+            'delivered' => (clone $base)->where('Status', 'delivered')->count(),
+            'overdue' => (clone $base)->where('Status', 'pending')
                 ->where('Expected_Delivery_Date', '<', now()->toDateString())
                 ->count(),
         ];
 
-        return view('admin.deliveries.index', compact('deliveries', 'stats'));
+        return view('admin.deliveries.index', compact('deliveries', 'stats', 'type'));
     }
 
     /**

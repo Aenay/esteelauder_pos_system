@@ -20,6 +20,7 @@ class Product extends Model
         'Quantity_on_Hand',
         'description',
         'image',
+        'Supplier_ID',
     ];
 
     protected $casts = [
@@ -28,6 +29,11 @@ class Product extends Model
     ];
 
     // Relationships
+    public function supplier()
+    {
+        return $this->belongsTo(Supplier::class, 'Supplier_ID', 'Supplier_ID');
+    }
+
     public function orderDetails()
     {
         return $this->hasMany(OrderDetail::class, 'Product_ID', 'Product_ID');

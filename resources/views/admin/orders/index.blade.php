@@ -8,14 +8,65 @@
             </div>
         </header>
         <div class="flex-1 overflow-x-hidden overflow-y-auto bg-gray-100 p-6">
+            <!-- Order Type Filter -->
+            <div class="bg-white p-6 rounded-lg shadow-md mb-6">
+                <div class="flex items-center justify-between mb-4">
+                    <h2 class="text-xl font-semibold">Order Management</h2>
+                    <div class="flex items-center space-x-4">
+                        <!-- Statistics -->
+                        <div class="flex items-center space-x-6 text-sm">
+                            <div class="text-center">
+                                <div class="text-2xl font-bold text-gray-900">{{ $stats['total'] }}</div>
+                                <div class="text-gray-600">Total Orders</div>
+                            </div>
+                            <div class="text-center">
+                                <div class="text-2xl font-bold text-blue-600">{{ $stats['customer_orders'] }}</div>
+                                <div class="text-gray-600">Customer Orders</div>
+                            </div>
+                            <div class="text-center">
+                                <div class="text-2xl font-bold text-green-600">{{ $stats['supplier_orders'] }}</div>
+                                <div class="text-gray-600">Supplier Orders</div>
+                            </div>
+                        </div>
+                    </div>
+                </div>
+                
+                <!-- Filter Tabs -->
+                <div class="border-b border-gray-200">
+                    <nav class="-mb-px flex space-x-8">
+                        <a href="{{ route('admin.orders.index', ['type' => 'all']) }}" 
+                           class="py-2 px-1 border-b-2 font-medium text-sm {{ $type === 'all' ? 'border-pink-500 text-pink-600' : 'border-transparent text-gray-500 hover:text-gray-700 hover:border-gray-300' }}">
+                            <i class="fas fa-list mr-2"></i>All Orders
+                        </a>
+                        <a href="{{ route('admin.orders.index', ['type' => 'customer']) }}" 
+                           class="py-2 px-1 border-b-2 font-medium text-sm {{ $type === 'customer' ? 'border-pink-500 text-pink-600' : 'border-transparent text-gray-500 hover:text-gray-700 hover:border-gray-300' }}">
+                            <i class="fas fa-users mr-2"></i>Customer Orders
+                        </a>
+                        <a href="{{ route('admin.orders.index', ['type' => 'supplier']) }}" 
+                           class="py-2 px-1 border-b-2 font-medium text-sm {{ $type === 'supplier' ? 'border-pink-500 text-pink-600' : 'border-transparent text-gray-500 hover:text-gray-700 hover:border-gray-300' }}">
+                            <i class="fas fa-truck mr-2"></i>Supplier Orders
+                        </a>
+                    </nav>
+                </div>
+            </div>
+            
             <div class="bg-white p-6 rounded-lg shadow-md">
-                <h2 class="text-xl font-semibold mb-4">All Orders</h2>
+                <h2 class="text-xl font-semibold mb-4">
+                    @if($type === 'customer')
+                        Customer Orders
+                    @elseif($type === 'supplier')
+                        Supplier Orders
+                    @else
+                        All Orders
+                    @endif
+                </h2>
                 <div class="overflow-x-auto">
                     <table class="min-w-full bg-white">
                         <thead class="bg-gray-200 text-gray-600">
                             <tr>
                                 <th class="py-3 px-6 text-left">Order ID</th>
-                                <th class="py-3 px-6 text-left">Customer</th>
+                                <th class="py-3 px-6 text-left">Type</th>
+                                <th class="py-3 px-6 text-left">Customer/Supplier</th>
                                 <th class="py-3 px-6 text-left">Staff</th>
                                 <th class="py-3 px-6 text-left">Date</th>
                                 <th class="py-3 px-6 text-center">Total Amount</th>
@@ -28,26 +79,44 @@
                             @foreach ($orders as $order)
                                 <tr class="border-b">
                                     <td class="py-3 px-6">#{{ $order->Order_ID }}</td>
+                                    <td class="py-3 px-6">
+                                        @if ($order->customer_type === 'supplier')
+                                            <span class="inline-flex items-center px-2 py-1 rounded-full text-xs bg-green-100 text-green-800">
+                                                <i class="fas fa-truck mr-1"></i>Supplier
+                                            </span>
+                                        @else
+                                            <span class="inline-flex items-center px-2 py-1 rounded-full text-xs bg-blue-100 text-blue-800">
+                                                <i class="fas fa-user mr-1"></i>Customer
+                                            </span>
+                                        @endif
+                                    </td>
                                     <td class="py-3 px-6 font-medium">
-                                        @if ($order->customer_type === 'internal' && $order->customer)
+                                        @if ($order->customer_type === 'supplier')
+                                            <div class="flex flex-col">
+                                                <span class="font-semibold text-gray-900">{{ $order->customer->Customer_Name ?? 'Supplier Order' }}</span>
+                                                <span class="text-xs text-green-600">
+                                                    <i class="fas fa-truck mr-1"></i>Supplier Order
+                                                </span>
+                                            </div>
+                                        @elseif ($order->customer_type === 'internal' && $order->customer)
                                             <div class="flex flex-col">
                                                 <span class="font-semibold text-gray-900">{{ $order->customer->Customer_Name }}</span>
                                                 <span class="text-xs text-blue-600">
                                                     <i class="fas fa-crown mr-1"></i>Member
                                                 </span>
                                             </div>
-                                        @elseif ($order->customer_type === 'walk_in' && $order->customer)
+                                        @elseif ($order->customer_type === 'external' && $order->customer)
                                             <div class="flex flex-col">
                                                 <span class="font-semibold text-gray-900">{{ $order->customer->Customer_Name }}</span>
                                                 <span class="text-xs text-gray-500">
-                                                    <i class="fas fa-user mr-1"></i>Walk-in Customer
+                                                    <i class="fas fa-shopping-cart mr-1"></i>Online Customer
                                                 </span>
                                             </div>
                                         @else
                                             <div class="flex flex-col">
-                                                <span class="font-semibold text-gray-900">External Customer</span>
+                                                <span class="font-semibold text-gray-900">Walk-in Customer</span>
                                                 <span class="text-xs text-gray-500">
-                                                    <i class="fas fa-shopping-cart mr-1"></i>Guest
+                                                    <i class="fas fa-user mr-1"></i>Guest
                                                 </span>
                                             </div>
                                         @endif

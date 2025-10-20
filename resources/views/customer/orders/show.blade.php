@@ -158,6 +158,51 @@
                     </div>
                 </div>
 
+                <!-- Delivery Status -->
+                <div class="bg-white shadow rounded-lg">
+                    <div class="px-6 py-4 border-b border-gray-200">
+                        <h2 class="text-lg font-medium text-gray-900">Delivery Status</h2>
+                    </div>
+                    <div class="px-6 py-4 space-y-3">
+                        @php
+                            $latestDelivery = $order->deliveries->sortByDesc('Expected_Delivery_Date')->first();
+                        @endphp
+                        @if($latestDelivery)
+                            <div class="flex items-center justify-between">
+                                <div class="flex items-center space-x-3">
+                                    {!! $latestDelivery->status_badge !!}
+                                    <span class="text-sm text-gray-700">Expected: {{ optional($latestDelivery->Expected_Delivery_Date)->format('M j, Y') }}</span>
+                                </div>
+                            </div>
+                            @if($latestDelivery->Tracking_Number || $latestDelivery->Carrier)
+                                <div class="text-sm text-gray-700">
+                                    @if($latestDelivery->Tracking_Number)
+                                        <div>Tracking #: <span class="font-mono">{{ $latestDelivery->Tracking_Number }}</span></div>
+                                    @endif
+                                    @if($latestDelivery->Carrier)
+                                        <div>Carrier: {{ $latestDelivery->Carrier }}</div>
+                                    @endif
+                                </div>
+                            @endif
+                            @if($latestDelivery->Actual_Delivery_Date)
+                                <div class="text-sm text-green-700">Delivered on {{ $latestDelivery->Actual_Delivery_Date->format('M j, Y') }}</div>
+                            @elseif(optional($latestDelivery->Expected_Delivery_Date) && $latestDelivery->Expected_Delivery_Date->isPast())
+                                <div class="text-sm text-red-600">This delivery is past the expected date.</div>
+                            @endif
+                        @else
+                            <div class="flex items-center">
+                                <div class="h-8 w-8 rounded-full bg-gray-100 flex items-center justify-center mr-3">
+                                    <i class="fas fa-truck text-gray-500"></i>
+                                </div>
+                                <div>
+                                    <p class="text-sm font-medium text-gray-900">No delivery scheduled yet</p>
+                                    <p class="text-sm text-gray-500">We’ll notify you when shipping is arranged.</p>
+                                </div>
+                            </div>
+                        @endif
+                    </div>
+                </div>
+
                 <!-- Staff Information -->
                 <div class="bg-white shadow rounded-lg">
                     <div class="px-6 py-4 border-b border-gray-200">
