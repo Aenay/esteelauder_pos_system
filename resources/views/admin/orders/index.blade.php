@@ -28,6 +28,12 @@
                                 <div class="text-gray-600">Supplier Orders</div>
                             </div>
                         </div>
+                        @can('manage-purchase-orders')
+                        <a href="{{ route('admin.supplier-orders.create') }}" 
+                           class="inline-flex items-center bg-green-600 hover:bg-green-700 text-white px-4 py-2 rounded-lg">
+                            <i class="fas fa-plus mr-2"></i>Create Supplier Order
+                        </a>
+                        @endcan
                     </div>
                 </div>
                 

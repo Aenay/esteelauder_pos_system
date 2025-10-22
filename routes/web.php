@@ -82,7 +82,8 @@ Route::middleware(['auth', 'verified'])->prefix('admin')->name('admin.')->group(
 
     // Supplier Orders Management - permission based
     Route::middleware(['permission:manage-purchase-orders'])->group(function () {
-        Route::resource('supplier-orders', \App\Http\Controllers\Admin\SupplierOrderController::class);
+        // Keep only create and store for supplier orders; listing and viewing handled in Orders UI
+        Route::resource('supplier-orders', \App\Http\Controllers\Admin\SupplierOrderController::class)->only(['create','store']);
     });
 
     // Delivery Management - permission based

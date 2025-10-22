@@ -12,6 +12,7 @@ use App\Models\DeliveryDetail;
 use Illuminate\Http\Request;
 use Illuminate\Support\Facades\DB;
 use Illuminate\Support\Str;
+use Illuminate\Support\Facades\Storage;
 
 class SupplierOrderController extends Controller
 {
@@ -49,7 +50,7 @@ class SupplierOrderController extends Controller
             'expected_delivery_date' => 'required|date|after:today',
             'notes' => 'nullable|string|max:500',
             'products' => 'required|array|min:1',
-            'products.*.product_id' => 'required|exists:products,Product_ID',
+            // Removed strict product_id exists to allow new product creation
             'products.*.quantity' => 'required|integer|min:1',
             'products.*.unit_cost' => 'required|numeric|min:0',
         ]);
@@ -79,7 +80,7 @@ class SupplierOrderController extends Controller
             // Create supplier order
             $order = Order::create([
                 'Order_Date' => now(),
-                'Staff_ID' => auth()->id(), // Current admin user
+                'Staff_ID' => auth()->id(),
                 'Customer_ID' => $customer->Customer_ID,
                 'customer_type' => 'supplier',
                 'Promotion_ID' => null,
@@ -91,11 +92,49 @@ class SupplierOrderController extends Controller
                 'transaction_id' => 'SUP-' . time() . rand(1000, 9999),
             ]);
 
-            // Create order details
-            foreach ($request->products as $productData) {
+            // Resolve product IDs (create new products if needed), then create order details
+            foreach ($request->products as $key => $productData) {
+                $actualProductId = null;
+                if (!empty($productData['is_new'])) {
+                    // Validate minimal fields for new product
+                    $name = $productData['name'] ?? null;
+                    $sku = $productData['sku'] ?? null;
+                    $price = $productData['unit_cost'] ?? null;
+                    if (!$name || !$sku || $price === null) {
+                        throw new \Exception('New product requires name, SKU, and unit cost.');
+                    }
+
+                    // If SKU already exists, reuse existing product; else create new
+                    $existing = Product::where('SKU', $sku)->first();
+                    if ($existing) {
+                        $actualProductId = $existing->Product_ID;
+                        // Optionally update price or supplier association if desired
+                        // $existing->update(['Price' => $price, 'Supplier_ID' => $request->supplier_id]);
+                    } else {
+                        $imageFile = $request->file("products.$key.image");
+                        $dataToCreate = [
+                            'Product_Name' => $name,
+                            'SKU' => $sku,
+                            'Price' => $price,
+                            'Quantity_on_Hand' => 0,
+                            'description' => null,
+                            'Supplier_ID' => $request->supplier_id,
+                        ];
+                        if ($imageFile) {
+                            $imagePath = $imageFile->store('products', 'public');
+                            $dataToCreate['image'] = $imagePath;
+                        }
+                        $newProduct = Product::create($dataToCreate);
+                        $actualProductId = $newProduct->Product_ID;
+                    }
+                } else {
+                    // Existing product
+                    $actualProductId = $productData['product_id'];
+                }
+
                 OrderDetail::create([
                     'Order_ID' => $order->Order_ID,
-                    'Product_ID' => $productData['product_id'],
+                    'Product_ID' => $actualProductId,
                     'Quantity' => $productData['quantity'],
                 ]);
             }
@@ -110,13 +149,18 @@ class SupplierOrderController extends Controller
                 'Total_Amount' => $subtotal,
             ]);
 
-            // Create delivery details
-            foreach ($request->products as $productData) {
+            // Create delivery details using resolved product IDs
+            foreach ($request->products as $key => $productData) {
+                // Resolve again to ensure IDs match what was used above
+                $resolvedProductId = !empty($productData['is_new'])
+                    ? (Product::where('SKU', $productData['sku'])->value('Product_ID') ?? $productData['product_id'])
+                    : $productData['product_id'];
+
                 $totalCost = $productData['quantity'] * $productData['unit_cost'];
                 
                 DeliveryDetail::create([
                     'Delivery_ID' => $delivery->Delivery_ID,
-                    'Product_ID' => $productData['product_id'],
+                    'Product_ID' => $resolvedProductId,
                     'Quantity_Ordered' => $productData['quantity'],
                     'Quantity_Received' => 0,
                     'Unit_Cost' => $productData['unit_cost'],
@@ -127,7 +171,7 @@ class SupplierOrderController extends Controller
 
             DB::commit();
 
-            return redirect()->route('admin.supplier-orders.index')
+            return redirect()->route('admin.orders.index', ['type' => 'supplier'])
                 ->with('success', 'Supplier order created successfully with delivery tracking.');
 
         } catch (\Exception $e) {
@@ -207,7 +251,7 @@ class SupplierOrderController extends Controller
 
             DB::commit();
 
-            return redirect()->route('admin.supplier-orders.index')
+            return redirect()->route('admin.orders.index', ['type' => 'supplier'])
                 ->with('success', 'Supplier order deleted successfully');
 
         } catch (\Exception $e) {

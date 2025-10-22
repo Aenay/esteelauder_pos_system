@@ -47,6 +47,7 @@
 
         <!-- Main Information Cards -->
         <div class="grid grid-cols-1 lg:grid-cols-3 gap-6 mb-8">
+            @if($delivery->delivery_type === 'supplier')
             <!-- Supplier Information -->
             <div class="bg-white overflow-hidden shadow-sm rounded-lg">
                 <div class="p-6">
@@ -67,7 +68,36 @@
                     </div>
                 </div>
             </div>
-
+            @else
+            <!-- Customer & Order Information -->
+            <div class="bg-white overflow-hidden shadow-sm rounded-lg">
+                <div class="p-6">
+                    <h3 class="text-lg font-medium text-gray-900 mb-4">Customer & Order</h3>
+                    <div class="space-y-3">
+                        <div>
+                            <span class="text-sm font-medium text-gray-500">Customer:</span>
+                            <p class="text-gray-900">{{ optional($delivery->order->customer)->Customer_Name ?? 'N/A' }}</p>
+                        </div>
+                        <div>
+                            <span class="text-sm font-medium text-gray-500">Phone:</span>
+                            <p class="text-gray-900">{{ optional($delivery->order->customer)->Customer_Phone ?? 'N/A' }}</p>
+                        </div>
+                        <div>
+                            <span class="text-sm font-medium text-gray-500">Email:</span>
+                            <p class="text-gray-900">{{ optional($delivery->order->customer)->Customer_Email ?? 'N/A' }}</p>
+                        </div>
+                        <div>
+                            <span class="text-sm font-medium text-gray-500">Order ID:</span>
+                            <p class="text-gray-900">{{ $delivery->order->Order_ID ?? '-' }}</p>
+                        </div>
+                        <div>
+                            <span class="text-sm font-medium text-gray-500">Order Date:</span>
+                            <p class="text-gray-900">{{ $delivery->order && $delivery->order->Order_Date ? \Carbon\Carbon::parse($delivery->order->Order_Date)->format('M d, Y') : '-' }}</p>
+                        </div>
+                    </div>
+                </div>
+            </div>
+            @endif
             <!-- Delivery Information -->
             <div class="bg-white overflow-hidden shadow-sm rounded-lg">
                 <div class="p-6">

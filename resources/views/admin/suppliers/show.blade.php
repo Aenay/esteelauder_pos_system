@@ -107,6 +107,10 @@
                 </div>
                 <div class="p-6">
                     <div class="space-y-3">
+                        <a href="{{ route('admin.supplier-orders.create') }}?supplier={{ $supplier->Supplier_ID }}" 
+                           class="w-full bg-green-600 hover:bg-green-700 text-white text-center py-2 px-4 rounded-md text-sm font-medium transition-colors">
+                            Create Supplier Order
+                        </a>
                         <a href="{{ route('admin.deliveries.create') }}?supplier={{ $supplier->Supplier_ID }}" 
                            class="w-full bg-purple-600 hover:bg-purple-700 text-white text-center py-2 px-4 rounded-md text-sm font-medium transition-colors">
                             Create New Delivery

@@ -74,7 +74,7 @@
                     </div>
                     
                     <!-- Product Info -->
-                    <div class="p-4 flex flex-col flex-grow">
+                    <div class="p-1 flex flex-col flex-grow">
                         <h3 class="font-semibold text-lg text-gray-900 mb-2 line-clamp-2">{{ $product->Product_Name }}</h3>
                         <p class="text-2xl font-bold text-pink-600 mb-2">${{ number_format($product->Price, 2) }}</p>
                         <p class="text-sm text-gray-600 mb-4">

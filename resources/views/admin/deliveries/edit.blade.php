@@ -55,6 +55,7 @@
                 
                 <!-- Basic Information -->
                 <div class="grid grid-cols-1 md:grid-cols-2 gap-6 mb-6">
+                    @if($delivery->delivery_type === 'supplier')
                     <div>
                         <label for="Supplier_ID" class="block text-sm font-medium text-gray-700 mb-2">Supplier *</label>
                         <select name="Supplier_ID" id="Supplier_ID" required 
@@ -71,6 +72,7 @@
                             <p class="text-red-500 text-sm mt-1">{{ $message }}</p>
                         @enderror
                     </div>
+                    @endif
 
                     <div>
                         <label for="Expected_Delivery_Date" class="block text-sm font-medium text-gray-700 mb-2">Expected Delivery Date *</label>

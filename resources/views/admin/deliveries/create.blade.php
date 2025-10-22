@@ -7,7 +7,7 @@
         <div class="mb-6 flex justify-between items-center">
             <div>
                 <h2 class="text-3xl font-bold text-gray-900">Create New Delivery</h2>
-                <p class="text-gray-600 mt-2">Add a new delivery from supplier with products and quantities</p>
+                <p class="text-gray-600 mt-2">Create a delivery from a supplier or fulfill a customer order</p>
             </div>
             <a href="{{ route('admin.deliveries.index') }}" 
                class="bg-gray-500 hover:bg-gray-600 text-white font-bold py-2 px-4 rounded-lg flex items-center">
@@ -24,10 +24,18 @@
                 @csrf
                 
                 <!-- Basic Information -->
-                <div class="grid grid-cols-1 md:grid-cols-2 gap-6 mb-6">
+                <div class="grid grid-cols-1 md:grid-cols-3 gap-6 mb-6">
                     <div>
+                        <label for="delivery_type" class="block text-sm font-medium text-gray-700 mb-2">Delivery Type *</label>
+                        <select name="delivery_type" id="delivery_type" required 
+                                class="w-full border-gray-300 rounded-lg shadow-sm focus:border-indigo-500 focus:ring-indigo-500">
+                            <option value="supplier" {{ old('delivery_type', 'supplier') === 'supplier' ? 'selected' : '' }}>Supplier</option>
+                            <option value="customer" {{ old('delivery_type') === 'customer' ? 'selected' : '' }}>Customer</option>
+                        </select>
+                    </div>
+                    <div id="supplier-field-wrapper">
                         <label for="Supplier_ID" class="block text-sm font-medium text-gray-700 mb-2">Supplier *</label>
-                        <select name="Supplier_ID" id="Supplier_ID" required 
+                        <select name="Supplier_ID" id="Supplier_ID" 
                                 class="w-full border-gray-300 rounded-lg shadow-sm focus:border-indigo-500 focus:ring-indigo-500">
                             <option value="">Select Supplier</option>
                             @foreach($suppliers as $supplier)
@@ -40,7 +48,6 @@
                             <p class="text-red-500 text-sm mt-1">{{ $message }}</p>
                         @enderror
                     </div>
-
                     <div>
                         <label for="Expected_Delivery_Date" class="block text-sm font-medium text-gray-700 mb-2">Expected Delivery Date *</label>
                         <input type="date" name="Expected_Delivery_Date" id="Expected_Delivery_Date" required
@@ -50,6 +57,26 @@
                         @error('Expected_Delivery_Date')
                             <p class="text-red-500 text-sm mt-1">{{ $message }}</p>
                         @enderror
+                    </div>
+                </div>
+
+                <!-- Customer Order Selection -->
+                <div id="customer-fields" class="grid grid-cols-1 md:grid-cols-2 gap-6 mb-6" style="display:none;">
+                    <div>
+                        <label for="Order_ID" class="block text-sm font-medium text-gray-700 mb-2">Customer Order *</label>
+                        <select name="Order_ID" id="Order_ID" 
+                                class="w-full border-gray-300 rounded-lg shadow-sm focus:border-indigo-500 focus:ring-indigo-500">
+                            <option value="">Select Order</option>
+                            @foreach($orders as $order)
+                                <option value="{{ $order->Order_ID }}" {{ old('Order_ID') == $order->Order_ID ? 'selected' : '' }}>
+                                    #{{ $order->Order_ID }} — {{ optional($order->customer)->Customer_Name }} — {{ \Carbon\Carbon::parse($order->Order_Date)->format('M d, Y') }}
+                                </option>
+                            @endforeach
+                        </select>
+                        @error('Order_ID')
+                            <p class="text-red-500 text-sm mt-1">{{ $message }}</p>
+                        @enderror
+                        <p class="text-gray-500 text-sm mt-2">When a customer order is selected, products are auto-populated from the order.</p>
                     </div>
                 </div>
 
@@ -88,7 +115,7 @@
                 </div>
 
                 <!-- Products Section -->
-                <div class="mb-6">
+                <div class="mb-6" id="products-section">
                     <h3 class="text-lg font-medium text-gray-900 mb-4">Products</h3>
                     <div id="products-container">
                         <div class="product-row bg-gray-50 p-4 rounded-lg mb-4">
@@ -151,6 +178,62 @@
 
 <script>
 let productCount = 1;
+
+function toggleDeliveryMode(type) {
+    const supplierWrapper = document.getElementById('supplier-field-wrapper');
+    const supplierSelect = document.getElementById('Supplier_ID');
+    const customerFields = document.getElementById('customer-fields');
+    const orderSelect = document.getElementById('Order_ID');
+    const productsSection = document.getElementById('products-section');
+    const addProductBtn = document.getElementById('add-product');
+
+    const setProductInputsRequired = (required) => {
+        document.querySelectorAll('#products-container .product-row').forEach(row => {
+            row.querySelectorAll('select[name*="[Product_ID]"], input[name*="[Quantity_Ordered]"], input[name*="[Unit_Cost]"]').forEach(el => {
+                if (required) {
+                    el.setAttribute('required', 'required');
+                } else {
+                    el.removeAttribute('required');
+                }
+            });
+        });
+    };
+
+    if (type === 'customer') {
+        // Show customer order selector
+        customerFields.style.display = '';
+        orderSelect?.setAttribute('required', 'required');
+
+        // Hide supplier and products manual inputs
+        supplierWrapper.style.display = 'none';
+        supplierSelect?.removeAttribute('required');
+
+        productsSection.style.display = 'none';
+        addProductBtn.style.display = 'none';
+        setProductInputsRequired(false);
+    } else {
+        // Supplier delivery
+        customerFields.style.display = 'none';
+        orderSelect?.removeAttribute('required');
+
+        supplierWrapper.style.display = '';
+        supplierSelect?.setAttribute('required', 'required');
+
+        productsSection.style.display = '';
+        addProductBtn.style.display = '';
+        setProductInputsRequired(true);
+    }
+}
+
+document.addEventListener('DOMContentLoaded', function() {
+    const deliveryTypeSelect = document.getElementById('delivery_type');
+    if (deliveryTypeSelect) {
+        toggleDeliveryMode(deliveryTypeSelect.value);
+        deliveryTypeSelect.addEventListener('change', function() {
+            toggleDeliveryMode(this.value);
+        });
+    }
+});
 
 document.getElementById('add-product').addEventListener('click', function() {
     const container = document.getElementById('products-container');
