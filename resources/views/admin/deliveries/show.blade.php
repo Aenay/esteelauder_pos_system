@@ -180,10 +180,10 @@
                                     <td class="px-6 py-4 whitespace-nowrap text-sm text-gray-500">{{ $detail->product->SKU }}</td>
                                     <td class="px-6 py-4 whitespace-nowrap text-sm text-gray-900">{{ $detail->Quantity_Ordered }}</td>
                                     <td class="px-6 py-4 whitespace-nowrap">
-                                        @if($delivery->Status !== 'delivered')
+                                        @if($delivery->delivery_type === 'supplier' && $delivery->Status !== 'delivered')
                                             <input type="number" 
                                                    class="quantity-input w-20 border-gray-300 rounded text-sm"
-                                                   data-detail-id="{{ $detail->id }}"
+                                                   data-detail-id="{{ $detail->Delivery_Detail_ID }}"
                                                    value="{{ $detail->Quantity_Received }}"
                                                    min="0" 
                                                    max="{{ $detail->Quantity_Ordered }}">
@@ -221,7 +221,7 @@
                     </table>
                 </div>
 
-                @if($delivery->Status !== 'delivered')
+                @if($delivery->delivery_type === 'supplier' && $delivery->Status !== 'delivered')
                     <div class="mt-6 flex justify-end">
                         <button type="button" id="update-quantities" 
                                 class="bg-green-600 hover:bg-green-700 text-white font-bold py-2 px-6 rounded-lg">
@@ -250,7 +250,7 @@
     </div>
 </div>
 
-@if($delivery->Status !== 'delivered')
+@if($delivery->delivery_type === 'supplier' && $delivery->Status !== 'delivered')
 <script>
 document.getElementById('update-quantities').addEventListener('click', function() {
     const quantities = {};

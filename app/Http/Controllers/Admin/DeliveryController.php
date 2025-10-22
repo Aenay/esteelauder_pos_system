@@ -269,10 +269,23 @@ class DeliveryController extends Controller
             'quantities.*' => 'required|integer|min:0',
         ]);
 
+        // Only supplier deliveries can update quantities received
+        if ($delivery->delivery_type !== 'supplier') {
+            return response()->json([
+                'success' => false,
+                'message' => 'Updating quantities is allowed only for supplier deliveries.'
+            ], 400);
+        }
+
         DB::beginTransaction();
         try {
             foreach ($request->quantities as $detailId => $quantity) {
                 $detail = DeliveryDetail::findOrFail($detailId);
+
+                // Ensure the detail belongs to the provided delivery
+                if ($detail->Delivery_ID !== $delivery->Delivery_ID) {
+                    throw new \Exception("Invalid detail ID for this delivery.");
+                }
                 
                 if ($quantity > $detail->Quantity_Ordered) {
                     throw new \Exception("Quantity received cannot exceed quantity ordered for product: " . $detail->product->Product_Name);

@@ -142,6 +142,7 @@ class SupplierOrderController extends Controller
             // Create delivery record
             $delivery = Delivery::create([
                 'Supplier_ID' => $request->supplier_id,
+                'delivery_type' => 'supplier',
                 'Delivery_Reference' => 'DEL-' . strtoupper(Str::random(8)),
                 'Expected_Delivery_Date' => $request->expected_delivery_date,
                 'Status' => 'pending',
