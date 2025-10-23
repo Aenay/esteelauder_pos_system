@@ -3,7 +3,8 @@
 @section('content')
 <div class="py-6">
     <div class="max-w-4xl mx-auto px-4 sm:px-6 lg:px-8">
-        <!-- Header -->
+        <!-- Loyalty Program Content -->
+        <!--
         <div class="mb-8">
             <h1 class="text-3xl font-bold text-gray-900">Loyalty Program</h1>
             <p class="mt-2 text-gray-600">Track your loyalty points and tier status</p>
@@ -278,6 +279,10 @@
                 </div>
             </div>
         @endif
+        -->
+        <div class="text-center py-12">
+            <p class="text-gray-600">Loyalty Program is temporarily unavailable.</p>
+        </div>
     </div>
 </div>
 @endsection

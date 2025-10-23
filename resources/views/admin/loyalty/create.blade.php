@@ -1,16 +1,11 @@
 @extends('layouts.app')
 
 @section('content')
-<div class="container mx-auto px-4 py-8">
-    <div class="max-w-2xl mx-auto">
-        <div class="flex items-center mb-6">
-            <a href="{{ route('admin.loyalty.index') }}" class="text-pink-600 hover:text-pink-900 mr-4">
-                <svg class="w-6 h-6" fill="none" stroke="currentColor" viewBox="0 0 24 24">
-                    <path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M15 19l-7-7 7-7"></path>
-                </svg>
-            </a>
-            <h1 class="text-3xl font-bold text-gray-900">Create New Loyalty Record</h1>
-        </div>
+<div class="max-w-7xl mx-auto px-4 sm:px-6 lg:px-8">
+    <div class="mb-8">
+        <h1 class="text-3xl font-bold text-gray-900">Create New Loyalty Record</h1>
+        <p class="mt-2 text-gray-600">Add a new loyalty record for a customer</p>
+    </div>
 
         <div class="bg-white shadow-md rounded-lg p-6">
             <form action="{{ route('admin.loyalty.store') }}" method="POST">
@@ -74,6 +69,10 @@
                 </div>
             </form>
         </div>
+    </div>
+    -->
+    <div class="text-center py-12">
+        <p class="text-gray-600">Create New Loyalty Record is temporarily unavailable.</p>
     </div>
 </div>
 @endsection

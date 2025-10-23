@@ -2,6 +2,8 @@
 
 @section('content')
 <div class="container mx-auto px-4 py-8">
+    <!-- Loyalty Program Analytics -->
+    <!--
     <div class="flex items-center mb-6">
         <a href="{{ route('admin.loyalty.index') }}" class="text-pink-600 hover:text-pink-900 mr-4">
             <svg class="w-6 h-6" fill="none" stroke="currentColor" viewBox="0 0 24 24">
@@ -90,6 +92,11 @@
                 View All Records
             </a>
         </div>
+    </div>
+</div>
+    -->
+    <div class="text-center py-12">
+        <p class="text-gray-600">Loyalty Program Analytics is temporarily unavailable.</p>
     </div>
 </div>
 @endsection

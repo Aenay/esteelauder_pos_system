@@ -34,7 +34,10 @@
                     <!-- Customer Info -->
                     <div class="text-right">
                         <p class="text-sm font-medium text-gray-900">{{ $customer->Customer_Name }}</p>
+                        <!-- Loyalty Tier Badge -->
+                        <!--
                         <p class="text-xs text-gray-500">{{ $customer->loyalty_tier }} Member</p>
+                        -->
                     </div>
                 </div>
             </div>

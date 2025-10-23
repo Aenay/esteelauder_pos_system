@@ -64,7 +64,7 @@
             </div>
             <nav class="flex-1 px-4 py-6 space-y-2">
                 <a href="{{ url('/pos') }}" class="sidebar-link flex items-center px-4 py-2 rounded-lg {{ request()->is('pos') ? 'active' : '' }} dark:hover:bg-pink-600 dark:active:bg-pink-700">
-                    <i class="fas fa-cash-register w-6"></i><span>POS</span>
+                    <i class="fas fa-cash-register w-6"></i><span>Researched Title</span>
                 </a>
 
                 @can('view-products')

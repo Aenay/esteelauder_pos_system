@@ -1,16 +1,35 @@
 @extends('layouts.app')
 
 @section('content')
-<div class="container mx-auto px-4 py-8">
-    <div class="max-w-4xl mx-auto">
-        <div class="flex items-center mb-6">
-            <a href="{{ route('admin.loyalty.index') }}" class="text-pink-600 hover:text-pink-900 mr-4">
-                <svg class="w-6 h-6" fill="none" stroke="currentColor" viewBox="0 0 24 24">
-                    <path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M15 19l-7-7 7-7"></path>
-                </svg>
-            </a>
-            <h1 class="text-3xl font-bold text-gray-900">Loyalty Record Details</h1>
+<div class="max-w-7xl mx-auto px-4 sm:px-6 lg:px-8">
+    <div class="mb-8">
+        <div class="flex justify-between items-center">
+            <div class="flex items-center">
+                <a href="{{ route('admin.loyalty.index') }}" class="text-pink-600 hover:text-pink-900 mr-4">
+                    <svg class="w-6 h-6" fill="none" stroke="currentColor" viewBox="0 0 24 24">
+                        <path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M15 19l-7-7 7-7"></path>
+                    </svg>
+                </a>
+                <h1 class="text-3xl font-bold text-gray-900">Loyalty Record Details</h1>
+            </div>
+            <div class="flex space-x-4">
+                <a href="{{ route('admin.loyalty.edit', $loyalty) }}" 
+                   class="bg-indigo-600 hover:bg-indigo-700 text-white font-bold py-2 px-4 rounded">
+                    Edit Record
+                </a>
+                <form action="{{ route('admin.loyalty.destroy', $loyalty) }}" method="POST" class="inline">
+                    @csrf
+                    @method('DELETE')
+                    <button type="submit" 
+                            class="bg-red-600 hover:bg-red-700 text-white font-bold py-2 px-4 rounded"
+                            onclick="return confirm('Are you sure you want to delete this record?')">
+                        Delete Record
+                    </button>
+                </form>
+            </div>
         </div>
+        <p class="mt-2 text-gray-600">View detailed information about this loyalty record</p>
+    </div>
 
         <!-- Customer Information Card -->
         <div class="bg-white shadow-md rounded-lg p-6 mb-6">
@@ -129,8 +148,12 @@
             <a href="{{ route('admin.loyalty.index') }}" 
                class="bg-gray-600 hover:bg-gray-700 text-white font-bold py-2 px-4 rounded">
                 Back to List
-            </a>
+            </a></div>
         </div>
+    </div>
+    -->
+    <div class="text-center py-12">
+        <p class="text-gray-600">Loyalty Record Details are temporarily unavailable.</p>
     </div>
 </div>
 @endsection

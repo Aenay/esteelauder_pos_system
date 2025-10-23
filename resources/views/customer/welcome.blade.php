@@ -38,7 +38,7 @@
                 Welcome to Estee Lauder Customer Portal
             </h1>
             <p class="text-xl text-gray-600 mb-8">
-                Access your order history, track loyalty points, and manage your account
+                Access your order history and manage your account
             </p>
 
             <!-- Features -->
@@ -59,6 +59,8 @@
                     <p class="text-gray-600">View all your past purchases and order details</p>
                 </div>
                 
+                <!-- Loyalty Points Feature Card -->
+                <!--
                 <div class="bg-white rounded-lg shadow-md p-6">
                     <div class="mx-auto h-12 w-12 flex items-center justify-center rounded-full bg-yellow-100 mb-4">
                         <i class="fas fa-star text-yellow-600 text-xl"></i>
@@ -66,6 +68,7 @@
                     <h3 class="text-lg font-semibold text-gray-900 mb-2">Loyalty Points</h3>
                     <p class="text-gray-600">Track your loyalty points and tier status</p>
                 </div>
+                -->
                 
                 <div class="bg-white rounded-lg shadow-md p-6">
                     <div class="mx-auto h-12 w-12 flex items-center justify-center rounded-full bg-green-100 mb-4">

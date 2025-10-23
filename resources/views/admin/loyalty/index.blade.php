@@ -1,9 +1,14 @@
 @extends('layouts.app')
 
 @section('content')
-<div class="container mx-auto px-4 py-8">
+<div class="max-w-7xl mx-auto px-4 sm:px-6 lg:px-8">
+    <!-- Loyalty Program Management Content -->
+    <!--
     <div class="flex justify-between items-center mb-6">
-        <h1 class="text-3xl font-bold text-gray-900">Loyalty Points Management</h1>
+        <div>
+            <h1 class="text-3xl font-bold text-gray-900">Loyalty Program Management</h1>
+            <p class="mt-2 text-gray-600">Manage loyalty tiers, points, and member status</p>
+        </div>
         <a href="{{ route('admin.loyalty.create') }}" class="bg-pink-600 hover:bg-pink-700 text-white font-bold py-2 px-4 rounded">
             Add New Loyalty Record
         </a>
@@ -198,6 +203,10 @@
         <div class="px-6 py-4 border-t border-gray-200">
             {{ $loyaltyRecords->links() }}
         </div>
+    </div>
+    -->
+    <div class="text-center py-12">
+        <p class="text-gray-600">Loyalty Program Management is temporarily unavailable.</p>
     </div>
 </div>
 @endsection

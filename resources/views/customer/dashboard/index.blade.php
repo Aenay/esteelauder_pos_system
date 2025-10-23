@@ -12,10 +12,10 @@
                     <h1 class="text-3xl font-bold">Welcome back, {{ $customer->Customer_Name }}!</h1>
                     <p class="text-pink-100 mt-2">Manage your account, view orders, and continue shopping</p>
                 </div>
-                <div class="text-right">
+                <!-- <div class="text-right">
                     <div class="text-2xl font-bold">{{ $customer->loyalty_tier }} Member</div>
                     <div class="text-pink-100">{{ $orderStats['loyalty_points'] }} loyalty points</div>
-                </div>
+                </div> -->
             </div>
         </div>
     </div>
@@ -107,11 +107,14 @@
                             <i class="fas fa-user-edit mr-3 text-gray-400"></i>
                             <span>Edit Profile</span>
                         </a>
+                        <!-- Loyalty Program Link -->
+                        <!--
                         <a href="{{ route('customer.loyalty') }}" 
                            class="flex items-center p-3 text-gray-700 hover:bg-gray-50 rounded-lg transition-colors">
                             <i class="fas fa-star mr-3 text-gray-400"></i>
                             <span>Loyalty Program</span>
                         </a>
+                        -->
                         <a href="#" 
                            class="flex items-center p-3 text-gray-700 hover:bg-gray-50 rounded-lg transition-colors">
                             <i class="fas fa-headset mr-3 text-gray-400"></i>

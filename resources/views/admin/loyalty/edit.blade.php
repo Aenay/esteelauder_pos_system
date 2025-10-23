@@ -1,16 +1,11 @@
 @extends('layouts.app')
 
 @section('content')
-<div class="container mx-auto px-4 py-8">
-    <div class="max-w-2xl mx-auto">
-        <div class="flex items-center mb-6">
-            <a href="{{ route('admin.loyalty.show', $loyalty) }}" class="text-pink-600 hover:text-pink-900 mr-4">
-                <svg class="w-6 h-6" fill="none" stroke="currentColor" viewBox="0 0 24 24">
-                    <path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M15 19l-7-7 7-7"></path>
-                </svg>
-            </a>
-            <h1 class="text-3xl font-bold text-gray-900">Edit Loyalty Record</h1>
-        </div>
+<div class="max-w-7xl mx-auto px-4 sm:px-6 lg:px-8">
+    <div class="mb-8">
+        <h1 class="text-3xl font-bold text-gray-900">Edit Loyalty Record</h1>
+        <p class="mt-2 text-gray-600">Update loyalty points and tier information</p>
+    </div>
 
         <div class="bg-white shadow-md rounded-lg p-6">
             <form action="{{ route('admin.loyalty.update', $loyalty) }}" method="POST">
@@ -94,20 +89,10 @@
             </form>
         </div>
     </div>
+    -->
+    <div class="text-center py-12">
+        <p class="text-gray-600">Loyalty Record Edit is temporarily unavailable.</p>
+    </div>
 </div>
-
-<script>
-// Real-time calculation of current balance
-document.getElementById('points_earned').addEventListener('input', updateBalance);
-document.getElementById('points_used').addEventListener('input', updateBalance);
-
-function updateBalance() {
-    const earned = parseInt(document.getElementById('points_earned').value) || 0;
-    const used = parseInt(document.getElementById('points_used').value) || 0;
-    const balance = Math.max(0, earned - used);
-    
-    document.getElementById('current_balance_display').textContent = balance.toLocaleString();
-}
-</script>
 @endsection
 

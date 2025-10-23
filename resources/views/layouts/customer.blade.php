@@ -64,10 +64,13 @@
                        class="text-gray-700 hover:text-pink-600 px-3 py-2 rounded-md text-sm font-medium transition-colors">
                         <i class="fas fa-receipt mr-2"></i>Orders
                     </a>
+                    <!-- Loyalty Navigation Link -->
+                    <!--
                     <a href="{{ route('customer.loyalty') }}" 
                        class="text-gray-700 hover:text-pink-600 px-3 py-2 rounded-md text-sm font-medium transition-colors">
                         <i class="fas fa-star mr-2"></i>Loyalty
                     </a>
+                    -->
                 </div>
 
                 <!-- User Menu -->
@@ -104,10 +107,13 @@
                                class="block px-4 py-2 text-sm text-gray-700 hover:bg-gray-100">
                                 <i class="fas fa-receipt mr-2"></i>Order History
                             </a>
+                            <!-- Loyalty Points Menu Item -->
+                            <!--
                             <a href="{{ route('customer.loyalty') }}" 
                                class="block px-4 py-2 text-sm text-gray-700 hover:bg-gray-100">
                                 <i class="fas fa-star mr-2"></i>Loyalty Points
                             </a>
+                            -->
                             <hr class="my-1">
                             <form method="POST" action="{{ route('customer.logout') }}">
                                 @csrf
@@ -154,7 +160,10 @@
                     <ul class="space-y-2 text-sm">
                         <li><a href="{{ route('customer.shop.index') }}" class="text-gray-400 hover:text-white">Shop</a></li>
                         <li><a href="{{ route('customer.orders.index') }}" class="text-gray-400 hover:text-white">Orders</a></li>
+                        <!-- Loyalty Footer Link -->
+                        <!--
                         <li><a href="{{ route('customer.loyalty') }}" class="text-gray-400 hover:text-white">Loyalty</a></li>
+                        -->
                     </ul>
                 </div>
                 
