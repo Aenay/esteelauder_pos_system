@@ -82,14 +82,11 @@
 
                 <div class="grid grid-cols-1 md:grid-cols-2 gap-6 mb-6">
                     <div>
-                        <label for="Tracking_Number" class="block text-sm font-medium text-gray-700 mb-2">Tracking Number</label>
-                        <input type="text" name="Tracking_Number" id="Tracking_Number" 
-                               value="{{ old('Tracking_Number') }}"
-                               placeholder="Enter tracking number"
-                               class="w-full border-gray-300 rounded-lg shadow-sm focus:border-indigo-500 focus:ring-indigo-500">
-                        @error('Tracking_Number')
-                            <p class="text-red-500 text-sm mt-1">{{ $message }}</p>
-                        @enderror
+                        <label class="block text-sm font-medium text-gray-700 mb-2">Tracking Number</label>
+                        <div class="w-full border border-gray-300 rounded-lg px-3 py-2 bg-gray-50 text-gray-500">
+                            Will be auto-generated upon creation
+                        </div>
+                        <p class="text-gray-500 text-sm mt-2">A unique tracking number will be generated automatically when the delivery is created.</p>
                     </div>
 
                     <div>

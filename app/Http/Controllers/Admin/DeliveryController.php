@@ -25,7 +25,7 @@ class DeliveryController extends Controller
             ->when($type !== 'all', function ($q) use ($type) {
                 $q->where('delivery_type', $type);
             })
-            ->orderBy('Expected_Delivery_Date', 'asc')
+            ->orderBy('created_at', 'desc')
             ->paginate(15)
             ->withQueryString();
 
@@ -69,7 +69,6 @@ class DeliveryController extends Controller
             'delivery_type' => 'required|in:supplier,customer',
             'Expected_Delivery_Date' => 'required|date|after:today',
             'Notes' => 'nullable|string|max:500',
-            'Tracking_Number' => 'nullable|string|max:100',
             'Carrier' => 'nullable|string|max:100',
         ]);
 
@@ -91,6 +90,9 @@ class DeliveryController extends Controller
 
         DB::beginTransaction();
         try {
+            // Generate tracking number
+            $trackingNumber = 'TRK-' . strtoupper(Str::random(12));
+
             // Create delivery
             $delivery = Delivery::create([
                 'Supplier_ID' => $request->delivery_type === 'supplier' ? $request->Supplier_ID : null,
@@ -100,7 +102,7 @@ class DeliveryController extends Controller
                 'Expected_Delivery_Date' => $request->Expected_Delivery_Date,
                 'Status' => 'pending',
                 'Notes' => $request->Notes,
-                'Tracking_Number' => $request->Tracking_Number,
+                'Tracking_Number' => $trackingNumber,
                 'Carrier' => $request->Carrier,
                 'Total_Amount' => 0,
             ]);
