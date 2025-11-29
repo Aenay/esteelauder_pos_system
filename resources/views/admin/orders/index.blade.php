@@ -173,17 +173,17 @@
                                             <a href="{{ route('admin.orders.show', $order) }}" class="text-blue-500 hover:text-blue-700 font-medium">
                                                 <i class="fas fa-eye mr-1"></i> View
                                             </a>
-                                            @can('orders.edit')
+                                            {{-- @can('orders.edit')
                                             <a href="{{ route('admin.orders.edit', $order) }}" class="text-green-600 hover:text-green-800 font-medium">
                                                 <i class="fas fa-edit mr-1"></i> Edit
                                             </a>
-                                            @endcan
+                                            @endcan --}}
                                             @can('orders.delete')
                                             <form action="{{ route('admin.orders.destroy', $order) }}" method="POST" class="inline" onsubmit="return confirm('Delete this order? This action cannot be undone.');">
                                                 @csrf
                                                 @method('DELETE')
                                                 <button type="submit" class="text-red-600 hover:text-red-800 font-medium">
-                                                    <i class="fas fa-trash mr-1"></i> Delete
+                                                    <i class="fas fa-trash mr-1"></i> Cancel
                                                 </button>
                                             </form>
                                             @endcan
